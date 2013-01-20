@@ -1,0 +1,67 @@
+package {
+    import flash.text.*;
+    import flash.display.*;
+    import flash.events.*;
+    import org.si.sion.*;
+    import org.si.sound.*;
+    
+    import com.bit101.components.*;
+    import org.si.sound.mdx.*;
+    import flash.utils.ByteArray;
+    import flash.net.*;
+    
+    public class main extends Sprite {
+        public var driver:SiONDriver = new SiONDriver();
+        
+        function main() {
+            driver.debugMode = true;
+            driver.autoStop = true;
+            new PushButton(this, 4, 4, "load", _onLoad);
+            new PushButton(this, 4, 24, "stop", function(e:Event) : void { driver.fadeOut(1); });
+            title = new TextField();
+            title.y = 44;
+            title.autoSize = "left";
+            addChild(title);
+        }
+        
+        public var title:TextField = new TextField();
+        public var fr:FileReference;
+        public var mdxData:MDXData = new MDXData();
+        public var pdxData:PDXData = new PDXData();
+        public var sionData:SiONData = new SiONData();
+            
+        private function _onLoad(e:Event) : void {
+            fr = new FileReference();
+            fr.addEventListener("select",   function(e:Event):void{ fr.load(); });
+            fr.addEventListener("complete", function(e:Event):void{ _onSelect(fr.data); });
+            fr.browse([new FileFilter("MDX File", "*.mdx")]);
+        }
+        
+        private function _onSelect(bytes:ByteArray) : void {
+            mdxData.loadBytes(bytes);
+            if (mdxData.pdxFileName != null && pdxData.fileName != mdxData.pdxFileName) {
+                var fr:FileReference = new FileReference();
+                fr.addEventListener("select",   function(e:Event):void{fr.load();});
+                fr.addEventListener("complete", function(e:Event):void{_onPDXLoad(fr.name, fr.data);});
+                fr.browse([new FileFilter("PDX File", "*.pdx")]);
+            } else {
+                _onComplete();
+            }
+        }
+        
+        private function _onPDXLoad(name:String, bytes:ByteArray) : void {
+            pdxData.loadBytes(bytes);
+            pdxData.fileName = name.toUpperCase();
+            if (pdxData.fileName != mdxData.pdxFileName) title.text = mdxData.pdxFileName + "; Wrong PDX file ?";
+            else _onComplete();
+        }
+        
+        private function _onComplete() : void {
+            driver.stop();
+            sionData = mdxData.convertToSiONData(sionData, pdxData);
+            title.text = sionData.title;
+            driver.play(sionData);
+        }
+    }
+}
+

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="_onCreate();">
+    <mx:Script>
+        <![CDATA[
+        // The SiONs preset voices are from VAL-SOUND
+        // http://www.valsound.com/
+        //--------------------------------------------------
+            import flash.events.*;
+            import flash.display.*;
+            import flash.text.*;
+            import mx.events.*;
+            import mx.core.UIComponent;
+            import mx.collections.ArrayCollection;
+            
+            import org.si.sion.*;
+            import org.si.sion.effector.*;
+            import org.si.sion.events.*;
+            import org.si.sion.sequencer.SiMMLTrack;
+            import org.si.sion.utils.SiONPresetVoice;
+            
+            
+            
+            
+        // variables
+        //------------------------------
+            private var driver:SiONDriver = new SiONDriver();
+            private var presetVoice:SiONPresetVoice = new SiONPresetVoice();
+            private var keyboardKeys:String = 'zsxdcvgbhnjm,l.;/';
+            private var keyboardCodeTable:Vector.<int> = new Vector.<int>(17);
+            private var keyboardDisplay:UIComponent = new UIComponent();
+            private var keys :Vector.<Sprite> = new Vector.<Sprite>(17);
+            private var keyOn:Vector.<Shape>  = new Vector.<Shape>(17);
+            
+            private var currentVoice:SiONVoice;
+            private var keyboardFlag:uint;
+            private var octave:int;
+      
+            private var delaySendLevel:Number;
+            private var chorusSendLevel:Number;
+            
+            
+            
+            
+        // initializer
+        //------------------------------
+            private function _onCreate() : void {
+                var i:int;
+                
+                // event listeners
+                driver.addEventListener(SiONTrackEvent.NOTE_ON_FRAME,  _onNoteOnFrame);
+                driver.addEventListener(SiONTrackEvent.NOTE_OFF_FRAME, _onNoteOffFrame);
+                addEventListener("keyDown", _onKeyDown);
+                addEventListener("keyUp",   _onKeyUp);
+                
+                // keyboard display
+                createDisplay();
+                
+                // set selector items
+                var categ:Array, list:Array = [];
+                for each (categ in presetVoice.categolies) list.push({label:categ["name"]});
+                categSelect.dataProvider = new ArrayCollection(list);
+                _onFileSelectorChange();
+
+                // initialize parameters
+                for (i=0; i<17; i++) keyboardCodeTable[i] = keyboardKeys.charCodeAt(i);
+                delaySendLevel = 0.25;
+                chorusSendLevel = 0;
+                keyboardFlag = 0;
+                octave = 5;
+                currentVoice = presetVoice["sine"];
+
+                // effector setting
+                var dly:SiEffectStereoDelay  = new SiEffectStereoDelay();
+                dly.initialize();
+                dly.setParameters(200,0.2,false);
+                var cho:SiEffectStereoChorus = new SiEffectStereoChorus();
+                cho.initialize();
+                cho.setParameters(20,0.2,4,20);
+                driver.effector.initialize();
+                driver.effector.connect(1, dly);
+                driver.effector.connect(2, cho);
+                
+                // start stream without initializing effector
+                driver.play(null, false);
+            }
+            
+            private function createDisplay() : void
+            {
+                var tf:TextField, k:int, x:Number, pk:int, 
+                    wk:Array = [0,1,0,1,0,0,1,0,1,0,1,0,0,1,0,1,0],
+                    cmd:Vector.<int> = Vector.<int>([1,2,2,2,2]),
+                    vts:Array = [Vector.<Number>([0,20, 0,140, 30,140, 30,20, 0,20]), 
+                                 Vector.<Number>([5,20, 5,100, 25,100, 25,20, 5,20])];
+                for (k=0, x=-32, pk=0; k<17; k++) {
+                    x += (wk[k] == pk) ? 30 : 15;
+                    pk = wk[k];
+                    keys[k] = new Sprite();
+                    keyOn[k] = new Shape();
+                    if (wk[k]==0) _setKeyColor(0xffffff, 0x000080, '0',       120);  // white keys
+                    else          _setKeyColor(0x404040, 0x8080ff, '#ffffff',  80);  // black keys
+                    keyOn[k].graphics.drawPath(cmd, vts[wk[k]]);
+                    keyOn[k].graphics.endFill();
+                    keyOn[k].visible = false;
+                    keys[k].graphics.lineStyle(2, 0x000000);
+                    keys[k].graphics.drawPath(cmd, vts[wk[k]]);
+                    keys[k].graphics.endFill();
+                    keys[k].addChild(tf);
+                    keys[k].addChild(keyOn[k]);
+                    keys[k].x = x;
+                    if (wk[k]==0) keyboardDisplay.addChild(keys[k]);
+                }
+                for (k=0; k<17; k++) if (wk[k]==1) keyboardDisplay.addChild(keys[k]);
+                tf = new TextField();
+                tf.htmlText = "<font color='0'><b>&lt; q</b></font>";
+                tf.x = 0;
+                tf.y = 140;
+                keyboardDisplay.addChild(tf);
+                tf = new TextField();
+                tf.htmlText = "<font color='0'><b>w &gt;</b></font>";
+                tf.x = 270;
+                tf.y = 140;
+                keyboardDisplay.addChild(tf);
+                keyboardDisplay.x = 12;
+                keyboardDisplay.y = 140;
+                addChild(keyboardDisplay);
+                
+                function _setKeyColor(face:int, faceOn:int, letter:String, tfy:int) : void {
+                    keys[k].graphics.beginFill(face);
+                    keyOn[k].graphics.beginFill(faceOn, 0.5);
+                    tf = new TextField();
+                    tf.htmlText = "<font color='" + letter + "'><b>" + keyboardKeys.charAt(k) + "</b></font>";
+                    tf.x = 7;
+                    tf.y = tfy;
+                }
+            }
+            
+            
+            
+            
+        // operations
+        //------------------------------
+            private function _focusReset() : void {
+                stage.focus = keyboardDisplay;
+            }
+            
+            private function _allNoteOff() : void {
+                var i:int, baseNote:int = octave*12;
+                for (i=0; i<17; i++) driver.noteOff(i+baseNote);
+            }
+            
+            private function _refleshChannelSelector(categolyList:Array) : void {
+                var i:int, imax:int=categolyList.length, list:Array=[];
+                for (i=0; i<imax; i++) list.push({label:String(i+1)+": "+categolyList[i].name});
+                voiceSelect.dataProvider  = new ArrayCollection(list);
+                voiceSelect.selectedIndex = 0;
+            }
+            
+            
+            
+            
+        // driver events
+        //------------------------------
+            private function _onNoteOnFrame(e:SiONTrackEvent) : void {
+                var key:int = e.note - octave*12;
+                while (key<0) key += 12;
+                while (key>16) key -= 12;
+                keyOn[key].visible = true;
+            }
+            
+            private function _onNoteOffFrame(e:SiONTrackEvent) : void {
+                var key:int = e.note - octave*12;
+                while (key<0) key += 12;
+                while (key>16) key -= 12;
+                keyOn[key].visible = false;
+            }
+            
+            
+            
+            
+        // keyboard events
+        //------------------------------
+            private function _onKeyDown(e:KeyboardEvent) : void {
+                for (var i:int=0; i<17; i++) {
+                    if (keyboardCodeTable[i] == e.charCode) {
+                        var flag:uint = 1<<i;
+                        if ((keyboardFlag & flag) == 0) {
+                            keyboardFlag |= flag;
+                            var trk:SiMMLTrack = driver.noteOn(i+octave*12, currentVoice, 0, 0, 0, 0, 0, 1, 1);
+                            trk.channel.setStreamSend(1, delaySendLevel);
+                            trk.channel.setStreamSend(2, chorusSendLevel);
+                        }
+                        return;
+                    }
+                }
+                
+                if (driver.isPlaying) {
+                    switch (String.fromCharCode(e.charCode)) {
+                    case 'w':
+                        _allNoteOff();
+                        if (++octave>7) octave = 7;
+                        break;
+                    case 'q':
+                        _allNoteOff();
+                        if (--octave<2) octave = 2;
+                        break;
+                    }
+                }
+            }
+                        
+            private function _onKeyUp(e:KeyboardEvent) : void {
+                for (var i:int=0; i<17; i++) {
+                    if (keyboardCodeTable[i] == e.charCode) {
+                        var flag:uint = 1<<i;
+                        if ((keyboardFlag & flag) != 0) {
+                            keyboardFlag &= ~flag;
+                            driver.noteOff(i+octave*12);
+                        }
+                        return;
+                    }
+                }
+            }
+            
+            
+            
+            
+        // UI events
+        //------------------------------
+            private function _onFileSelectorChange() : void {
+                _refleshChannelSelector(presetVoice.categolies[categSelect.selectedIndex]);
+                _onChannelSelectorChange();
+            }
+            
+            private function _onChannelSelectorChange() : void {
+                if (voiceSelect.selectedItem == null) return;
+                currentVoice = presetVoice.categolies[categSelect.selectedIndex][voiceSelect.selectedIndex];
+            }
+                        
+            private function changeEffectSend() : void {
+                delaySendLevel  = delaySend.value  * 0.01;
+                chorusSendLevel = chorusSend.value * 0.01;
+                for each (var trk:SiMMLTrack in driver.sequencer.tracks) {
+                    trk.channel.setStreamSend(1, delaySendLevel);
+                    trk.channel.setStreamSend(2, chorusSendLevel);
+                }
+            }
+        ]]>
+    </mx:Script>
+    
+    <mx:TitleWindow title="Simple Keyboard" width="320" height="320" paddingTop="2" paddingBottom="2" paddingLeft="2" paddingRight="2">
+        <mx:ComboBox id="categSelect" width="296" height="24" dropdownWidth="240" rowCount="6" fontSize="10" fontWeight="normal" change="_onFileSelectorChange();"  close ="_focusReset();"/>
+        <mx:ComboBox id="voiceSelect" width="296" height="24" dropdownWidth="240" rowCount="6" fontSize="10" fontWeight="normal" change="_onChannelSelectorChange();" close ="_focusReset();"/>
+        <mx:HBox>
+            <mx:Label text="Delay" width="60"/>
+            <mx:HSlider id="delaySend"  width="220" height="24" maximum="100" tickInterval="10" snapInterval="5" value="25" change="changeEffectSend();"/>
+        </mx:HBox>
+        <mx:HBox>
+            <mx:Label text="Chorus" width="60"/>
+            <mx:HSlider id="chorusSend" width="220" height="24" maximum="100" tickInterval="10" snapInterval="5" value="0"  change="changeEffectSend();"/>
+        </mx:HBox>
+    </mx:TitleWindow>
+</mx:Application>
+

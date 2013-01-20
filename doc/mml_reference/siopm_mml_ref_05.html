@@ -1,0 +1,1902 @@
+<html>
+  <head>
+    <meta http-equiv='content-type' content='text/html;charset=utf-8'>
+    <title>SiOPM MML reference (version 0.6.4)</title>
+    <script type='text/javascript' src='jquery.js'></script>
+    <script type='text/javascript' src='siopm.js'></script>
+    <script type='text/javascript' src='siopm_mml_ref.js'></script>
+    <style type='text/css'>
+<!--
+* html {
+  overflow-y:scroll;
+}
+body {
+  font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: #000000;
+  background-color: #ffffff;
+  margin: 0px;
+  padding: 0px;
+}
+
+
+/* Headers */
+h1, h2, h3, h4, h5, h6  {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+  padding-left: 10px;
+}
+h2 {
+  font-size: 16px;
+  font-weight: bold;
+  padding-left: 10px;
+  background-color:#ccccff;
+}
+h3 {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #006699;
+  padding-left: 10px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+h4 {
+  font-size: 14px;
+  font-weight: bold;
+  color: #000000;
+  background-color: #ccccff;
+  padding-left: 20px;
+}
+
+
+/* Tables */
+table {
+  font-size: 12px;
+  border-spacing: 0px;
+  border-collapse: collapse;
+}
+thead {
+  margin-top: 4px;
+  font-weight: bold;
+}
+th {
+  color: #ffffff;
+  background-color: #4040c0;
+  font-weight: bold;
+  border: #999999 1px solid;
+}
+td {
+  border: #999999 1px solid;
+}
+td.tone {
+  background-color: #f0f0f0;
+}
+td.tone span.mml {
+  display: none;
+}
+table.no_border th, table.no_border td {
+  border-width: 0px;
+}
+.state {
+  font-weight: bold;
+  padding: 5px;
+  width: 80px;
+}
+.state i {
+  font-weight: normal;
+}
+.range {
+  padding: 5px;
+  width: 120px;
+}
+.desc {
+  padding: 5px;
+}
+b {
+  color: #c04040;
+}
+.notrec {
+  color: #8080c0;
+}
+
+
+/* Headers */
+.control {
+  margin-left: 20px;
+  font-size: 11px;
+}
+div.table {
+  margin: 10px;
+}
+div.appendex {
+  font-size: 12px;
+  margin: 10px;
+  padding: 5px;
+  border: #999999 1px solid;
+}
+div.appendex div.title {
+  padding: 2px;
+  padding-left: 6px;
+  font-weight: bold;
+  background-color: #e0e0f0;
+}
+pre.example, pre.formula {
+  width:640px;
+  overflow-x: auto;
+  display: block;
+  font-family: "Courier New", Courier, monospace;
+  margin: 4px;
+  padding: 4px;
+  background-color: #f0f0f0;
+}
+-->
+    </style>
+  </head>
+  <body>
+    <h1>SiOPM MML reference (version 0.6.4)</h1>
+    <div class='copyright'>(c) keim +Si+ 2011</div>
+
+
+
+    <h2>System operations</h2>
+    <div class='section'>
+      <h3>システムコマンド</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state'>Statement</th>
+            <th class='range'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>#TITLE{...};</td>
+            <td class='range'>(任意文字列)</td>
+            <td class='desc'>タイトルを記述する．
+<pre class='example'>
+#TITLE{タイトル};
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#SIGN{...};</td>
+            <td class='range'>[A-G][+#-b]?m?</td>
+            <td class='desc'>調性を指定する．ノートにデフォルトで変化記号(シャープ/フラット)が付加される．ナチュラルを指定したい場合は，反対の変化記号をつける．
+<pre class='example'>
+#SIGN{Fm}; fgab&lt;cdef;  // 調性をFm(b,e,a,d にフラット)にする
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#REV{...};</td>
+            <td class='range'>(octave|volume)</td>
+            <td class='desc'>シフトの方向を反転する．octave が指定された場合，'<'でオクターブダウン，'>'でオクターブアップ．volume が指定された場合，'('でボリュームダウン，')'でボリュームアップ．何も指定しない場合('#REV;'と記述)，両方を反転させる．
+<pre class='example'>
+#REV; cdefgab&gt;c;  // "cdefgab&lt;c" と同じ
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#MACRO{...};</td>
+            <td class='range'>(static|dynamic)</td>
+            <td class='desc'>マクロの展開方法を指定する．static が指定された場合，マクロ内のマクロを定義時に展開する(デフォルト)．dynamic が指定された場合，マクロ内のマクロを展開時に展開する．
+<pre class='example'>
+#MACRO{static};  #A=cde;#B=Afg;o5B; #A=gfe;o4B; // "o5cdefg; o4cdefg" と展開される
+</pre>
+<pre class='example'>
+#MACRO{dynamic}; #A=cde;#B=Afg;o5B; #A=gfe;o4B; // "o5cdefg; o4gfefg" と展開される
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#VMODE{...};</td>
+            <td class='range'>(n88|mdx|mck|tss|%x|%v)</td>
+            <td class='desc'>全トラックの %x, %v コマンドを一括指定する．
+<pre class='example'>
+#VMODE{%x1%v1,2}; v15cv12cv9c; // 全トラックに %x1%v1,2 が適用される
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#TMODE{...};</td>
+            <td class='range'>(unit|fps|timerb)=?n</td>
+            <td class='desc'>'t' コマンドの基本単位を指定する. 'unit'を指定した場合, 't' コマンド値は指定値ｎで割られる. 'fps'は指定値ｎで[frame/second]値を指定(default;60)し、t コマンド値で[frames/beat]．'timerb'は指定値ｎで動作クロック[kHz]を指定(default;4000)し，t コマンド値で192部音符長で割り込みを行う timerB OPMレジスタ値を指定する．
+<pre class='example'>
+#TMODE{unit=100}; t10050cde; // t10050 means bpm=100.5
+</pre>
+<pre class='example'>
+#TMODE{fps=60}; t30cde; // t30 means 30[frames/beat](bpm=120)
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#QUANT<i>n</i>;</td>
+            <td class='range'>1 - (8)</td>
+            <td class='desc'>'q'コマンドの最大値を変更する．'q'コマンドのデフォルト値は最大値の75%(切捨て)になる．
+<pre class='example'>
+#QUANT16; q8cde; // q の最大値を16に設定
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#FPS<i>n</i>;</td>
+            <td class='range'>1 - 1000 (60)</td>
+            <td class='desc'>@fpsコマンドのデフォルト値を変更する．
+<pre class='example'>
+#FPS100;  // @fps のデフォルト値を100に設定
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#END;</td>
+            <td class='range'>&nbsp;</td>
+            <td class='desc'>このコマンド以降の文字列を無視する．
+<pre class='example'>
+#END; この文字列は無視される．
+</pre>
+            </td>
+          </tr>
+        </tbody></table>
+        <div class='appendex'>
+          <div class='title'>#SIGN{...};の書式</div>
+          <div>
+            <table class='no_border' style='margin:10px;'>
+              <tr>
+                <td>C,  Am</td><td>(全てナチュラル)</td>
+              </tr>
+              <tr>
+                <td>G,  Em</td><td>f+</td>
+              </tr>
+              <tr>
+                <td>D,  Bm</td><td>f+, c+</td>
+              </tr>
+              <tr>
+                <td>A,  F+m, F#m</td><td>f+, c+, g+</td>
+              </tr>
+              <tr>
+                <td>E,  C+m, C#m</td><td>f+, c+, g+, d+</td>
+              </tr>
+              <tr>
+                <td>B,  G+m, G#m</td><td>f+, c+, g+, d+, a+</td>
+              </tr>
+              <tr>
+                <td>F+, F#,  D+m, D#m</td><td>f+, c+, g+, d+, a+, e+</td>
+              </tr>
+              <tr>
+                <td>C+, C#,  A+m, A#m</td><td>f+, c+, g+, d+, a+, e+, b+</td>
+              </tr>
+              <tr>
+                <td>F,  Dm</td><td>b-</td>
+              </tr>
+              <tr>
+                <td>B-, Bb,  Gm</td><td>b-, e-</td>
+              </tr>
+              <tr>
+                <td>E-, Eb,  Cm</td><td>b-, e-, a-</td>
+              </tr>
+              <tr>
+                <td>A-, Ab,  Fm</td><td>b-, e-, a-, d-</td>
+              </tr>
+              <tr>
+                <td>D-, Db,  B-m, Bbm</td><td>b-, e-, a-, d-, g-</td>
+              </tr>
+              <tr>
+                <td>G-, Gb,  E-m, Ebm</td><td>b-, e-, a-, d-, g-, c-</td>
+              </tr>
+              <tr>
+                <td>C-, Cb,  A-m, Abm</td><td>b-, e-, a-, d-, g-, c-, f-</td>
+              </tr>
+            </tbody></table>
+            または，カンマ区切りで個別に変化記号を付与する．<br/>
+            例)ホールトーンスケールを指定．#SIGN{f+,g-,a-,b-};
+          </div>
+        </div>
+      </div>
+
+      <h3>マクロ定義</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state'>Statement</th>
+            <th class='range'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>#[A-Z]=...;</td>
+            <td class='range'>(MML文字列)</td>
+            <td class='desc'>マクロを定義する．'#ABCD=c;' or '#A-D=c;' でマクロA,B,C,Dに同時代入．
+<pre class='example'>
+#A=cde;   l8AAgedAd;    // "l8cdecdegedcded" と展開される
+</pre>
+<pre class='example'>
+#A-C=cde; l8ABgedCd;    // "l8cdecdegedcded" と展開される
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#[A-Z]+=...;</td>
+            <td class='range'>(MML文字列)</td>
+            <td class='desc'>マクロに文字列加算する．'#ABCD+=c;' or '#A-D+=c;' でマクロA,B,C,Dに同時加算．
+<pre class='example'>
+#A=cde; #B=efg; #AB+=fg; l8AB;    // "l8cdefgefgfg" と展開される
+</pre>
+            </td>
+          </tr>
+        </tbody></table>
+      </div>
+      
+      <h3>テーブル定義</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state'>Statement</th>
+            <th class='range'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>#WAVB<i>n</i>{...};</td>
+            <td class='range'>n;0 - 255</td>
+            <td class='desc'>SCC音源(%4)で参照する波形を16進数文字列で定義する．TSSCP の #WAVB から仕様が変更になり，一般的な unsigned char (-128=0x80, -1=0xff, 127=0x7f) で表現する．
+<pre class='example'>
+#WAVB0{36454d4b41362f303639332309efd9cc362f220df2d9c8c3c6cbccc6bab0aeb7}; %4@0 cde;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#WAV<i>n</i>{...}(formula...);</td>
+            <td class='range'>n;0 - 255</td>
+            <td class='desc'>Wave table音源(%4)で参照する波形を定義する．テーブルのエントリ数32個でSCC音源波形を記述する．波形テーブルは -128～127の範囲で記述する．エントリ数が32以下の場合は 0 が埋められる．
+<pre class='example'>
+#WAV0{(0,127)8,(127,-128)16,(-128,0)8}; %4@0 cde;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#WAVCOLOR/#WAVC<i>n</i>{...};</td>
+            <td class='range'>n;0 - 255</td>
+            <td class='desc'>Wave table音源(%4)で参照する波形をunsigned int 16進数文字列(wave color)で定義する．wave color は，ハモンドオルガンの基音より上の7本のドローバーをLSBから各4bitで表現したunsigned int値で，MSBの4bitで合成する波形の番号を指定できる．
+<pre class='example'>
+#WAVCOLOR0{08400f0f}; %4@0 cde;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#TABLE<i>n</i>{...}(formula...);</td>
+            <td class='range'>n;0 - 254</td>
+            <td class='desc'>テーブルエンベロープ(@@,na,np,nt,nf,_@@,_na,_np,_nt,_nf)で参照するテーブルを定義する．値の範囲は参照するエンベロープコマンドに依存する．
+<pre class='example'>
+#TABLE0{(64,0)5,(32,0)5,(16,0)5}; q8 na0 cde;
+</pre>
+            </td>
+          </tr>
+        </tbody></table>
+        <div class='appendex'>
+          <div class='title'>#TABLEn{...};と#WAVn{...};の書式</div>
+          <div>
+            <ul>
+              <li>カンマ区切りで数値を記述する．<br/>例) #TABLE0{0,2,4,6}</li>
+              <li>"|"が指定されている場合，終端到達後，その位置から繰り返す．<br/>例) #TABLE0{0,2|4,6} (0,2,4,6,4,6,4,6...) </li>
+              <li>"[]n"で括られている場合，指定値分その中を繰り返す．<br/>例) #TABLE0{[0,1]3,2,3} (0,1,0,1,0,1,2,3) </li>
+              <li>(a)n の書式は，aをn回繰り返す．<br/>例) #TABLE0{(0)4} (#TABLE0{0,0,0,0} と同等)</li>
+              <li>(a,b)n の書式は，[a,b)をnエントリで線形補間する．最後の値には到達しないので注意．<br/>例) #TABLE0{(0,8)4} (#TABLE0{0,2,4,6} と同等)</li>
+              <li>(a,b,c,...)n の書式は，数値リスト[a,b,c,...)をnで割った内分値を採用する．<br/>例) #TABLE0{(0,6,3,9)9} (#TABLE0{0,2,4,6,5,4,3,5,7} と同等)</li>
+              <li>補間の際，小数値は四捨五入される．<br/>例) #TABLE0{(0,1,3)8} (#TABLE0{0,0,1,1,1,2,2,3} と同等)</li>
+              <li>{...}の後に'[repeat]*[magnify]+[offset]'と続ける事でエントリの繰り返し，倍率(負値/小数可)，オフセット(負値/小数可)を指定できる．<br/>これらは，一旦，数値リストが整数に丸め込まれてから計算され，その結果は再び整数に丸め込まれる．<br/>
+                <ul>
+                  <li>#TABLE0{0,1,2,3}3 (#TABLE0{0,0,0,1,1,1,2,2,2,3,3,3} と同等)</li>
+                  <li>#TABLE0{0,1,2,3}*2 (#TABLE0{0,2,4,6} と同等)</li>
+                  <li>#TABLE0{0,1,2,3}+2 (#TABLE0{2,3,4,5} と同等)</li>
+                  <li>#TABLE0{0,1,2,3}3*2-2 (#TABLE0{-2,-2,-2,0,0,0,2,2,2,4,4,4} と同等)</li>
+                  <li>#TABLE0{(0,3)6}*5 (#TABLE0{0,5,5,10,10,15} と同等)</li>
+                  <li>#TABLE0{(0,6)6}*0.5 (#TABLE0{0,1,1,2,2,3} と同等)</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <h3>FM音源 音色定義</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state'>Statement</th>
+            <th class='range'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>#@<i>n</i>{...}(sequence...);</td>
+            <td class='range'>n;0 - 255</td>
+            <td class='desc'>@al,@fb,@で指定する各値をパラメータとして羅列する(ただしこのコマンドでは multiple に小数の指定が可能．"@"コマンドでは不可．小数部は"@ml"の第２引数に相当する．)．使用するオペレータの数(@al第１引数)は，定義したパラメータの数によって自動的に決定される．パラメータ数は18(1operator), 33(2operators), 48(3operators), 63(4operators)．アルゴリズムについては"@al"の項を参照．
+<pre class='formula'>
+#@0{
+  alg[0-15], fb[0-7], fbc[0-3],
+  (ws, ar, dr, sr, rr, sl, tl, ksr, ksl, mul, dt1, detune, ams, phase, fixedNote) x operator count
+};
+%6@0 cde;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#OPL@<i>n</i>{...}(sequence...);</td>
+            <td class='range'>n;0 - 255</td>
+            <td class='desc'>OPL3で指定する各値をパラメータとして羅列する．パラメータ数は13(1operator), 24(2operators), 35(3operators), 46(4operators)．3operatorsの場合，4operators接続のop#3をスルーするアルゴリズムが適用される．2operatorsの場合，alg=0,1 以外，エラーを返す．アルゴリズムについては"@al"の項を参照．
+<pre class='formula'>
+#OPL@0{
+  alg[0-3], fb[0-7], 
+  (ws[0-7], ar[0-15], dr[0-15], rr[0-15], egt[0,1], sl[0-15], tl[0-63], ksr[0,1], ksl[0-3], mul[0-15], ams[0-3]) x operator count
+};
+%6@0 cde;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#OPM@<i>n</i>{...}(sequence...);</td>
+            <td class='range'>n;0 - 255</td>
+            <td class='desc'>OPMで指定する各値をパラメータとして羅列する．パラメータ数は13(1operator), 24(2operators), 35(3operators), 46(4operators)．3operatorsの場合，4operators接続のop#3をスルーするアルゴリズムが適用される．2operatorsの場合，4operators接続のop#2,#3をスルーするアルゴリズムが適用される．アルゴリズムについては"@al"の項を参照．
+<pre class='formula'>
+#OPM@0{
+  alg[0-7], fb[0-7], 
+  (ar[0-31], dr[0-31], sr[0-31], rr[0-15], sl[0-15], tl[0-127], ks[0-3], mul[0-15], dt1[0-7], dt2[0-3], ams[0-3]) x operator count
+};
+%6@0 cde;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#OPN@<i>n</i>{...}(sequence...);</td>
+            <td class='range'>n;0 - 255</td>
+            <td class='desc'>OPN指定する各値をパラメータとして羅列する．パラメータ数は12(1operator), 22(2operators), 32(3operators), 42(4operators)．3operatorsの場合，4operators接続のop#3をスルーするアルゴリズムが適用される．2operatorsの場合，4operators接続のop#2,#3をスルーするアルゴリズムが適用される．アルゴリズムについては"@al"の項を参照．
+<pre class='formula'>
+#OPN@0{
+  alg[0-7], fb[0-7], 
+  (ar[0-31], dr[0-31], sr[0-31], rr[0-15], sl[0-15], tl[0-127], ks[0-3], mul[0-15], dt1[0-7], ams[0-3]) x operator count
+};
+%6@0 cde;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#OPX@<i>n</i>{...}(sequence...);</td>
+            <td class='range'>n;0 - 255</td>
+            <td class='desc'>OPXで指定する各値をパラメータとして羅列する．alg指定値もOPXのアルゴリズム番号を指定する．パラメータ数は14(1operator), 26(2operators), 38(3operators), 50(4operators)．algの最大値は，オペレータ数によって変わる(1operator=0のみ，2operators=0-3，3operators=0-7，4operator=0-15，OPXと同等)．アルゴリズムについては"@al"の項を参照．
+<pre class='formula'>
+#OPX@0{
+  alg[0-15], fb[0-7], 
+  (ws[0-7], ar[0-31], dr[0-31], sr[0-31], rr[0-15], sl[0-15], tl[0-127], ks[0-3], mul[0-15], dt1[0-7], detune[], ams[0-3]) x operator count
+};
+%6@0 cde;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>#MA@<i>n</i>{...}(sequence...);</td>
+            <td class='range'>n;0 - 255</td>
+            <td class='desc'>MA3で指定する各値をパラメータとして羅列する．パラメータ数は14(1operator), 26(2operators), 38(3operators), 50(4operators)．alg=0,1はパラメータ数26(2operators)以外ではエラーを返す．3,4operatorsの場合，alg=2-7以外，エラーを返す．3operatorsでalg=2-7の場合，4operators接続のop#3をスルーするアルゴリズムが適用される．2operatorsでalg=2-7の場合，4operators接続のop#2,#3をスルーするアルゴリズムが適用される．アルゴリズムについては"@al"の項を参照．
+<pre class='formula'>
+#MA@0{
+  alg[0-7], fb[0-7], 
+  (ws[0-31], ar[0-15], dr[0-15], sr[0-15], rr[0-15], sl[0-15], tl[0-63], ksr[0,1], ksl[0-3], mul[0-15], dt1[0-7], ams[0-3]) x operator count
+};
+%6@0 cde;
+</pre>
+            </td>
+          </tr>
+        </tbody></table>
+        <div class='appendex'>
+          <div class='title'>音色定義コマンドについて</div>
+          <div>
+            上述各コマンドを用いてパラメータを予め定義し，シーケンス内で'%6@[0-255]'で呼び出す．<br/>
+            パラメータを羅列する際，数字以外は全て区切り文字として認識する(ただし可読性のためカンマ/スペース/タブを推奨．また，可読性のためオペレータ間の区切りをセミコロンにするのも良い)．
+            また，{...}の直後にMMLシーケンスを記述する事で，'%6@[0-255]'音色呼出と同時に実行するシーケンスを設定する事ができる．ただし，このMMLシーケンスに譜面コマンド(c,d,e,f,g,a,b,r)と音色変更コマンド(%,@)を含めるとエラー．
+<pre class='example'>
+// 音色呼び出しの際，フィルタ/クォンタイズ設定も一緒に行う．
+#@0{ 8,  0,  0;
+16, 40,  0, 34, 34,  0, 13, 1, 0, 1, 0,  0, 0, 0, 0;
+ 1, 34, 28,  0,  0, 15, 35, 1, 0, 2, 0,  0, 0, 0, 0;
+ 4, 63, 63,  0,  0,  0, 42, 1, 0, 5, 0,  0, 0, 0, 0;
+ 0, 36,  0,  0, 34,  0,  0, 1, 0, 1, 0, -3, 0, 0, 0;
+} @f96,2,32,72q4;
+
+%6@0 cdefedc;
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3>PCM音源 音色定義</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state' style='width:160px;'>Statement</th>
+            <th class='range' style='width:240px;'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>#SAMPLER<i>n</i>{<i>waveID, oneShotFlag, pan, channelCount, startPoint, endPoint, loopPoint</i>};</td>
+            <td class='range'>n;0 - 127<br/>waveID;任意<br/>oneShotFlag;0,1(0)<br/>pan;-64~64(0)<br/>channelCount;1,2(2)<br/>startPoint;任意(-1)<br/>endPoint;任意(-1)<br/>loopPoint;任意(-1)</td>
+            <td class='desc'>nでサンプルをアサインするノートナンバーを指定し，waveIDでSoundインスタンスを示す任意文字列を指定する．oneShotFlagが1ならゲートタイムは無視して最後まで鳴らす．panで定位設定，channelCountでサンプルのステレオ設定を行う．startPoint, endPoint, loopPointはAppendex参照．</td>
+          </tr>
+        </tbody></table>
+        <table><tbody>
+          <tr>
+            <th class='state' style='width:160px;'>Statement</th>
+            <th class='range' style='width:240px;'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>#PCMWAVE<i>n</i>{<i>waveID, samplingNote, keyRangeFrom, keyRangeTo, channelCount, startPoint, endPoint, loopPoint</i>};</td>
+            <td class='range'>n;0 - 255<br/>waveID;任意<br/>samplingNote;0,1(0)<br/>keyRangeFrom;0~127(0)<br/>keyRangeTo;0~127(127)<br/>channelCount;1,2(2)<br/>startPoint;任意(-1)<br/>startPoint;任意(-1)<br/>loopPoint;任意(-1)</td>
+            <td class='desc'>nでサンプルをアサインするPCM音声番号を指定し，waveIDでSoundインスタンスを示す任意文字列を指定する．samplingNoteでサンプリングポイントを指定し，keyRangeFrom，keyRangeToでその音のキー範囲の指定する．channelCountでサンプルのステレオ設定を行う．startPoint, endPoint, loopPointはAppendex参照．</td>
+          </tr>
+        </tbody></table>
+        <table><tbody>
+          <tr>
+            <th class='state' style='width:160px;'>Statement</th>
+            <th class='range' style='width:240px;'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>#PCMVOICE<i>n</i>{<i>volumeCenterNote, volumeKeyRange, volumeRange, panCenterNote, panKeyRange, panRange, ar, dr, sr, rr, sl</i>};</td>
+            <td class='range'>n;0 - 255<br/>volumeCenterNote;0-127(4)<br/>volumeKeyRange;0-127(0)<br/>volumeRange;-128~128(0)<br/>panCenterNote;0-127(64)<br/>panKeyRange;0-127(0)<br/>panRange;-128~128<br/>ar;0~63<br/>dr;0~63<br/>sr;0~63<br/>rr;0~63<br/>sl;0~15</td>
+            <td class='desc'>nで設定するPCM音声番号を指定し volume* と pan* でノートに対する音量変化と定位変化を設定する．また最後の5引数でエンベロープカーブを設定する．詳細はAppendex参照．</td>
+          </tr>
+        </tbody></table>
+        <div class='appendex'>
+          <div class='title'>再生範囲の設定</div>
+          <div>
+            #SAMPLER と #PCMWAVE は，startPoint，endPoint，loopPoint の3引数を用いて再生位置をサンプル単位で指定できます．通常mp3音声は，仕様の都合でで先頭と末尾に無音部分が挿入されます．SiONではこの無音部分を検出して飛ばす機能を内蔵しています．
+            <ul>
+              <li>startPoint で再生開始位置を指定します．-1 を指定すると，先頭の無音部分を飛ばした開始位置を自動で設定します．</li>
+              <li>endPoint で再生終了位置を指定します．負値を指定すると末尾の無音部分を飛ばした位置から指定値分戻った終了位置を設定します．</li>
+              <li>loopPoint で繰り返しで戻る位置を指定します．-1 を指定すると繰り返ししません．0(startPointより前)を指定するとstartPointに設定されます．負値を指定すると末尾から指定値分戻った位置を設定します．</li>
+            </ul>
+            loopPoint を startPoint より前に設定することは出来ません．その場合 @ph コマンドを用いて再生開始位置を指定してください．
+          </div>
+        </div>
+        <div class='appendex'>
+          <div class='title'>#PCMVOICEの設定</div>
+          <div>
+            #PCMVOICE は ノートに対する音量変化と定位変化を設定します．設定した値で，再生時に volume と pan のオフセットをかけます．volumeRange と panRange は負値で逆のスロープになります．
+            <img src='./image/pcmvolume.png' alt='pcm volume parameters' title='pcm volume parameters'/>
+            <img src='./image/pcmpan.png' alt='pcm panning parameters' title='pcm panning parameters'/>
+          </div>
+        </div>
+      </div>
+      
+      <h3>チャンネル間のFM接続</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state'>Statement</th>
+            <th class='range'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>#FM{...};</td>
+            <td class='range'>(接続式)</td>
+            <td class='desc'>後続チャンネルの周波数変調接続(@i,@o)を行う．後続シーケンスに対してアルファベット順に名前を割り振って，それらの接続を式で記述する．接続方法を記述するアルファベットは大文字/小文字どちらでも可．<br/>'An(B)' でモジュレーション定義，OscB で OscA を変調する (n(0-7);変調度，省略時n=5(OPMにおけるFM変調と同値))．'A+B' で加算定義，Aでパイプを上書後，Bを加算する ('+'は省略可)．'A(B+C)'は，OscBとOscCの加算結果でOscAを変調する．<br/>【バグ？】3段以上のモジュレーションでTSSCPと異なる音が出る．ただしOPMエミュとは同じ音が出るため，TSSCPの方がおかしい気がする．
+<pre class='example'>
+#FM{B3(A)}; %5q8s63cde; %5q2cde;   // "@o1%5q8s63cde; @i3%5q2cde;" と同じ
+</pre>
+            </td>
+          </tr>
+        </tbody></table>
+        <div class='appendex'>
+          <div class='title'>FM音源エミュレーション(#@ + %6) と FM接続システムコマンド(#FM)の違い</div>
+          <div>
+            FM接続システムコマンドは，
+            <ul>
+              <li>個別チャンネルの出力で変調するため，各オペレータに異なったシーケンスを与える事が出来る．</li>
+              <li>LPFilter適用後の出力をFM接続に利用できる．</li>
+              <li>Ring Modulation 接続も利用できる．</li>
+              <li>LFO/テーブルエンベロープは 1チャンネルにつき1個 のため，各オペレータに異なったLFO/エンベロープを与える事が出来る．</li>
+            </ul>
+            一方，FM音源エミュレーションは，
+            <ul>
+              <li>接続が1チャンネル内で完結しているため，各オペレータからの出力をフィードバックできる（多段フィードバック等）．</li>
+              <li>接続が1チャンネル内で完結しているため，１つのシーケンスを定義すれば良く，データがシンプル．</li>
+              <li>処理が軽い．1チャンネルで単一のLFOを使用するため，特にモジュレーション時の負荷が低い．(同条件を設定すると同じ音が出ますが，負荷はFM接続システムコマンドの方が30%程度高い(LFO無しの場合)．)</li>
+            </ul>
+            また，FM音源チャンネルを#FM(@i,@o)で接続する事が出来る．この場合，#FMキャリアのop0(フィードバックされる位置)を#FMモジュレータで変調する．
+          </div>
+        </div>
+      </div>
+
+      <h3>エフェクタ接続</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state'>Statement</th>
+            <th class='range'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>#EFFECT<i>n</i>{...};</td>
+            <td class='range'>(エフェクタ記述用MML)</td>
+            <td class='desc'>スロットにエフェクタを接続する．n=0 でマスターエフェクトを指定．
+<pre class='example'>
+// Slot1にLPFilter→ディレイを設定．EffectSendLevel=32．
+#EFFECT1{lf3000delay300,32,1}; @v64,32q0cder;
+</pre>
+<pre class='example'>
+// Slot0はマスターエフェクト．最終出力に対してエフェクトを掛ける．
+#EFFECT0{autopan}; q0$cdefed;
+</pre>
+<pre class='example'>
+// Slot1の出力をSlot2に入力する
+#EFFECT1{dist}@v128,64;#EFFECT2{delay}; %11@v0,32 cder;
+</pre>
+            </td>
+          </tr>
+        </tbody></table>
+        <div class='appendex'>
+          <div class='title'>エフェクタ記述用MML</div>
+          <div>
+            #EFFECT システムコマンドでエフェクタ接続を設定する場合，エフェクタ記述専用の用MMLを使用します（下記参照）．<br/>
+            マスターエフェクト以外は #EFFECT{}のあとに続けて "p", "@p", "@v" コマンドを使用できます．"p", "@p" コマンドでそのエフェクタスロットの定位，"@v"コマンドでミキシングレベルを設定します（省略時128(最大値)）．<br/>
+            また，"@v"コマンドの第２引数以降を用いて後続エフェクタスロットへのセンドレベルを設定することができます．例えば，Slot2 で "#EFFECT2{...}@v96,64,32;" と記述した場合，Slot2自体のミキシングレベル96，Slot3へのセンドレベル64, Slot4へのセンドレベル32となります．センドレベルは後続Slotに対してのみ設定可能です．
+          </div>
+          <div>
+            <table><tbody>
+              <tr>
+                <th class='state' style='width:160px;'>Statement</th>
+                <th class='range' style='width:240px;'>Range</th>
+                <th class='desc'>Description</th>
+              </tr>
+              <tr>
+                <td class='state'>eq<i>lg,mg,hg,lf,hf</i></td>
+                <td class='range'>lg;Low gain[%](100)<br/>mg;Middle gain[%](100)<br/>hg;High gain[%](100)<br/>lf;Low freq.[Hz](800)<br/>hf;High freq.[Hz](5000)</td>
+                <td class='desc'><b>3Band <u>EQ</u>ualizer</b></td>
+              </tr>
+              <tr>
+                <td class='state'>ws<i>dist,level</i></td>
+                <td class='range'>dist;Distortion[](50)<br/>level;Output level[%](100)</td>
+                <td class='desc'><b><u>W</u>ave <u>S</u>haper</b></td>
+              </tr>
+              <tr>
+                <td class='state'>delay<i>time,fb,cross,wet</i></td>
+                <td class='range'>time;Delay time[ms](200)<br/>fb;Feedback[%](25)<br/>cross;Stereo channel crossing(0)<br/>wet;wet level[%](100)</td>
+                <td class='desc'><b><u>DELAY</u></td>
+              </tr>
+              <tr>
+                <td class='state'>reverb<i>dly1,dly2,fb,wet</i></td>
+                <td class='range'>dly1;Long delay time[%](70)<br/>dly1;Short delay time[%](40)<br/>fb;Feedback[%](80)<br/>wet;wet level[%](100)</td>
+                <td class='desc'><b><u>REVERB</u></td>
+              </tr>
+              <tr>
+                <td class='state'>chorus<i>time,fb,depth,wet</i></td>
+                <td class='range'>time;Delay time[ms](20)<br/>fb;Feedback[%](50)<br/>depth;Depth[](200)<br/>wet;wet level[%](100)</td>
+                <td class='desc'><b><u>CHORUS</u></td>
+              </tr>
+              <tr>
+                <td class='state'>dist<i>pre,post,lpf,slope</i></td>
+                <td class='range'>pre;PreGain[dB](-60)<br/>post;PostGain[dB](-12)<br/>lpf;LPF Freq[Hz](2400)<br/>slope;LPF Slope[oct](1)</td>
+                <td class='desc'><b><u>DIST</u>ortion</td>
+              </tr>
+              <tr>
+                <td class='state'>comp<i>thres,wnd,ar,rr,gain,level</i></td>
+                <td class='range'>thres;Threshold[%](70)<br/>wnd;Window Width[ms](50)<br/>ar;Attack[ms](20)<br/>rr;Release[ms](20)<br/>gain;Max gain[db](6)<br/>level;output level[%](50)</td>
+                <td class='desc'><b><u>COMP</u>ressor</td>
+              </tr>
+              <tr>
+                <td class='state'>autopan<i>freq,depth</i></td>
+                <td class='range'>freq;Frequency[Hz](1)<br/>depth;Panning width[%](100)</td>
+                <td class='desc'><b><u>AUTOPAN</u></td>
+              </tr>
+              <tr>
+                <td class='state'>stereo<i>wide,pan,phase</i></td>
+                <td class='range'>wide;enhancement[%](140)<br/>pan;Panning(0)<br/>phase;Phase invert(0)</td>
+                <td class='desc'><b><u>STEREO</u> enhancer</td>
+              </tr>
+              <tr>
+                <td class='state'>ds<i>freq, bits, ch</i></td>
+                <td class='range'>freq ; Freq.Shift(0)<br/>bits ; bit ratio(16)<br/>ch ; channel count(2)</td>
+                <td class='desc'><b><u>D</u>own <u>S</u>ampler. Freq.Shift=0 sets 44.1kHz, 1 sets 22.05kHz, 2 sets 11.02kHz ...</td>
+              </tr>
+              <tr>
+                <td class='state'>speaker<i>hardness</i></td>
+                <td class='range'>hardness ; diaphragm hardness[%](10)</td>
+                <td class='desc'><b><u>SPEAKER</u> simulator</td>
+              </tr>
+              <tr>
+                <td class='state'>lf<i>freq,band</i></td>
+                <td class='range'>freq;Frequency[Hz](800)<br/>band;band width[oct](1)</td>
+                <td class='desc'><b><u>L</u>ow pass <u>F</u>ilter</td>
+              </tr>
+              <tr>
+                <td class='state'>hf<i>freq,band</i></td>
+                <td class='range'>freq;Frequency[Hz](5000)<br/>band;band width[oct](1)</td>
+                <td class='desc'><b><u>H</u>igh pass <u>F</u>ilter</td>
+              </tr>
+              <tr>
+                <td class='state'>bf<i>freq,band</i></td>
+                <td class='range'>freq;Frequency[Hz](3000)<br/>band;band width[oct](1)</td>
+                <td class='desc'><b><u>B</u>and pass <u>F</u>ilter</td>
+              </tr>
+              <tr>
+                <td class='state'>nf<i>freq,band</i></td>
+                <td class='range'>freq;Frequency[Hz](3000)<br/>band;band width[oct](1)</td>
+                <td class='desc'><b><u>N</u>otch (band stop) <u>F</u>ilter</td>
+              </tr>
+              <tr>
+                <td class='state'>pf<i>freq,band</i></td>
+                <td class='range'>freq;Frequency[Hz](3000)<br/>band;band width[oct](1)</td>
+                <td class='desc'><b><u>P</u>eaking <u>F</u>ilter</td>
+              </tr>
+              <tr>
+                <td class='state'>af<i>freq,band</i></td>
+                <td class='range'>freq;Frequency[Hz](3000)<br/>band;band width[oct](1)</td>
+                <td class='desc'><b><u>A</u>ll pass <u>F</u>ilter</td>
+              </tr>
+              <tr>
+                <td class='state'>lb<i>freq,slope,gain</i></td>
+                <td class='range'>freq;Frequency[Hz](3000)<br/>slope;slope[oct](1)<br/>gain;gain[dB](6)</td>
+                <td class='desc'><b><u>L</u>ow <u>B</u>ooster</td>
+              </tr>
+              <tr>
+                <td class='state'>hb<i>freq,slope,gain</i></td>
+                <td class='range'>freq;Frequency[Hz](5500)<br/>slope;slope[oct](1)<br/>gain;gain[dB](6)</td>
+                <td class='desc'><b><u>H</u>igh <u>B</u>ooster</td>
+              </tr>
+              <tr>
+                <td class='state'>nlf<i>cut,res</i></td>
+                <td class='range'>cut;cutoff table index(255)<br/>res;resonance table index(255)</td>
+                <td class='desc'><b><u>EN</u>velope controlable <u>L</u>ow pass <u>F</u>ilter</td>
+              </tr>
+              <tr>
+                <td class='state'>nhf<i>cut,res</i></td>
+                <td class='range'>cut;cutoff table index(255)<br/>res;resonance table index(255)</td>
+                <td class='desc'><b><u>EN</u>velope controlable <u>H</u>igh pass <u>F</u>ilter</td>
+              </tr>
+              <tr>
+                <td class='state'>vowel<i>out,f1,g1,f2,g2</i></td>
+                <td class='range'>out;output[%](100)<br/>f1;1st freq.(800)<br/>g1;1st gain[dB](36)<br/>f2;2nd freq.(1300)<br/>g2;2nd gain[dB](24)</td>
+                <td class='desc'><b><u>Vowel</u> filter</td>
+              </tr>
+            </tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <h2>MML commands</h2>
+    <div class='section'>
+      <h3>制御</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state'>Statement</th>
+            <th class='range'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>t<i>n</i></td>
+            <td class='range'>1 - 511 (120)</td>
+            <td class='desc'><b>(<u>T</u>empo)テンポ指定．</b>どのシーケンス内に置いても全シーケンスに対してテンポが変更される．値省略時/初期値120．$ 繰り返しの場合，繰り返し内でテンポ変更を行っても，２ループ目以降テンポは変更されない．[]繰り返し内であれば，テンポは変更される．
+<pre class='example'>
+t100cde t200cde;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>$</td>
+            <td class='range'>&nbsp;</td>
+            <td class='desc'><b>(segno)無限繰り返し．</b>シーケンスの終端に到達した場合，それまでに$が指定されていれば，その位置に戻る．
+<pre class='example'>
+l8 $cde;     // "cdecdecde..."
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>[...|...]<i>n</i></td>
+            <td class='range'>1 - 65535 (2)</td>
+            <td class='desc'><b>(loop)ループ．</b>n無指定の場合 2 回繰り返す．ループ内に'|'が有る場合，最後の繰り返しで'|'以降のシーケンスがスキップされる．繰り返し回数は，ループの開始時/終了時どちらでも指定可能だが，終了時の設定が優先される．<br/>【推奨】繰り返し回数の指定は，特殊な場合を除いて，ループ終了時に記述する．
+<pre class='example'>
+l8 [cd|e]3;   // "cdecdecd"
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>@mask</td>
+            <td class='range'>0 - 63 (0)</td>
+            <td class='desc'><b>(event <u>MASK</u>)イベントマスク．</b>後続のイベントを無効化するマスクを設定する．偽TSSCPの'@m'コマンド相当．値省略時/初期値0．
+<pre class='example'>
+@mask1 v1c;   // "v1"は無視される
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>[A-Z]<br/>[A-Z](<i>n</i>)</td>
+            <td class='range'>-128 - 127 (0)</td>
+            <td class='desc'><b>マクロ展開．</b>#[A-Z]で定義したマクロ文字列を展開する．(<i>n</i>)を指定するとマクロ展開時にノートシフトされる．マクロ定義内のマクロはその時点での定義に従いに展開される(TSSCPと同様)．'#MACRO{dynamic}'を指定すると，マクロ定義内のマクロはシーケンス内で展開される際に展開される．
+<pre class='example'>
+#A=cde; l8 AAA;         // "cdecdecde"と展開される
+</pre>
+<pre class='example'>
+#A=cde; l8 AA(2)A(-2);  // "cdedef+&gt;b-&lt;cd"と展開される
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>// ...</td>
+            <td class='range'>&nbsp;</td>
+            <td class='desc'><b>１行コメント．</b>'//'以降，改行まで無視される．
+<pre class='example'>
+// コメント
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>/* ... */</td>
+            <td class='range'>&nbsp;</td>
+            <td class='desc'><b>複数行コメント．</b>'/*' と '*/' で囲われた領域を無視する．ネスト不可．
+<pre class='example'>
+/* コメント */
+</pre>
+            </td>
+          </tr>
+          <tr class='notrec'>
+            <td class='state'>![<i>n</i>...!|...!]</td>
+            <td class='range'>1 - 256 (2)</td>
+            <td class='desc'>【非推奨:TSSCPとの互換性のためのコマンド】．コンパイル時展開ループ．繰り返し回数は，ループの開始時/終了時どちらでも指定可能．ループのネストは不可．nの最大値は256．</td>
+          </tr>
+        </tbody></table>
+        <div class='appendex'>
+          <div class='title'>@maskの引数</div>
+          <div>
+            無効にしたいイベントの数値(下記参照)を加算した値を指定する．<br/>
+            1; (音量関連) x,v,@v,(,)<br/>
+            2; (定位関連) p,@p<br/>
+            4; (キーオフ) q,@q<br/>
+            8; (オペレータ) s,@,@al,@fb,@rr,@tl,@ml,@dt,@ph,@fx<br/>
+            16;(エンベロープ) @@,na,np,nt,nf,_@@,_na,_np,_nt,_nf<br/>
+            32;(モジュレーション) ma,mp<br/>
+          </div>
+        </div>
+      </div>
+      
+      <h3>音程関連</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state'>Statement</th>
+            <th class='range'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>[a-g][+#-]?<i>n</i></td>
+            <td class='range'>1 - 1920 ('l'指定値)</td>
+            <td class='desc'><b>(note)ノート指定．</b>c－b がそれぞれド－シに対応．'+', '#' を続けるとシャープ，'-' でフラット．数字を続けると長さ指定．値省略時は'l'コマンドの指定値を採用．デフォルトは4．'#SIGN' マクロを指定すると自動で特定ノートにシャープ/フラットが付く．ナチュラルは逆符号で対応．
+<pre class='example'>
+#SIGN{G}; cdef-gab&lt;c  // 'f'にナチュラル
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>r<i>n</i></td>
+            <td class='range'>1 - 1920 ('l'指定値)</td>
+            <td class='desc'><b>(<u>R</u>est)休符指定．</b>数字で音長指定．ノートと同じ．
+<pre class='example'>
+cder cder gedcdedr;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>o<i>n</i></td>
+            <td class='range'>0 - 9 (5)</td>
+            <td class='desc'><b>(<u>O</u>ctave)オクターブの指定．</b>'o5a'が440kHz．コンパイル時に展開されるため，ループすると値が元に戻る．値省略時/初期値5．
+<pre class='example'>
+o4[co5c]  // 'o4c o5c o4c o5c'と演奏
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>[&lt;&gt;]<i>n</i></td>
+            <td class='range'>1 - 9 (1)</td>
+            <td class='desc'><b>(octave shift)オクターブシフト．</b>引数でシフトするオクターブ数を指定，省略時1．コンパイル時に展開されるため，ループすると値が元に戻る．デフォルトは'&lt;'でオクターブ上げ，'&gt;'でオクターブ下げ．'#REV' マクロを指定すると符号が反転．このコマンドによってオクターブが0-9の範囲を外れる場合は無視される．
+<pre class='example'>
+o4[c&lt;c]  // 'o4c o5c o4c o5c'と演奏
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>k<i>n</i></td>
+            <td class='range'>-8192 - 8191 (0)</td>
+            <td class='desc'><b>(<u>K</u>ey detune)デチューン．</b>半音=64としてデチューンの指定．値省略時/初期値0．
+<pre class='example'>
+k-2cde; k2cde;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>kt<i>n</i></td>
+            <td class='range'>-128 - 127 (0)</td>
+            <td class='desc'><b>(<u>K</u>ey <u>T</u>ranspose)トランスポーズ．</b>TSSCPの'ns'に相当．半音=1としてトランスポーズの指定．値省略時/初期値0．
+<pre class='example'>
+cde; kt7cde;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>*</td>
+            <td class='range'>&nbsp;</td>
+            <td class='desc'><b>(pitch bend)ピッチベンド．</b>q/@qによる指定を無効化し，直前のノートを次のノートにピッチ変移させる．次音発音時エンベロープ/位相はリセットされない．
+<pre class='example'>
+c*&lt;c;  // 1オクターブベンディング．
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>po<i>n</i></td>
+            <td class='range'>0-</td>
+            <td class='desc'><b>(<u>PO</u>rtament)ポルタメント．</b>ノートをスラーで繋げた場合，直前のノートから次のノートにピッチ変移させる．ピッチベンドとは異なり，次音発音直後から変移を開始する．引数で変移にかかるフレーム数．値省略時/初期値0．
+<pre class='example'>
+po6l8c&g&f&<c>b&&ag&&fe&d&c4;  // スラーにポルタメントがかかる
+</pre>
+            </td>
+          </tr>
+          <tr class='notrec'>
+            <td class='state'>!@kr<i>n</i></td>
+            <td class='range'>-8192 - 8191 (0)</td>
+            <td class='desc'>【非推奨:偽TSSCPとの互換性のためのコマンド】．(Key detune Relative)相対デチューン．半音=64としてデチューンをシフト．値省略時0．</td>
+          </tr>
+          <tr class='notrec'>
+            <td class='state'>!@ns<i>n</i></td>
+            <td class='range'>-128 - 127 (0)</td>
+            <td class='desc'>【非推奨:偽TSSCPとの互換性のためのコマンド】．(Note Shift)相対トランスポーズ．半音=1としてトランスポーズをシフト．値省略時0．内部でノートシフトマクロ展開時に使われる．コンパイル時に展開されるため，ループ内で用いても1度しかトランスポーズされない．</td>
+          </tr>
+        </tbody></table>
+      </div>
+      
+      <h3>音長関連</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state'>Statement</th>
+            <th class='range'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>l<i>n</i></td>
+            <td class='range'>1 - 1920 (4)</td>
+            <td class='desc'><b>(<u>L</u>ength)デフォルト音長．</b>ノート/休符で音長省略時に採用される値の指定．l1で全音符，l4で四分音符，l16で16分音符．値省略時/初期値4．
+<pre class='example'>
+cder l8cder l16cder;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>^<i>n</i></td>
+            <td class='range'>1 - 1920 ('l'指定値)</td>
+            <td class='desc'><b>(extension)音長加算．</b>ノート/休符/デフォルト音長で音長を指定値分加算する．値省略時は'l'コマンドの指定値を採用．
+<pre class='example'>
+c4^16;  // 4分音符＋16分音符長で演奏
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>q<i>n</i></td>
+            <td class='range'>0 - 8 (6)</td>
+            <td class='desc'><b>(<u>Q</u>uantize)クォンタイズ．</b>キーオフのタイミングを指定音長との割合で指定する．q0でキーオンと同時にキーオフ．q4で指定音長の半分でキーオフ．q8でキーオフしない．値省略時/初期値6．
+<pre class='example'>
+q0cr q4cr q8cr;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>@q<i>n1</i>,<i>n2</i></td>
+            <td class='range'> 0 - 192 (0)</td>
+            <td class='desc'><b>(<u>A</u>bsolute <u>Q</u>uantize)絶対クォンタイズ/キーオンディレイ．</b>第一引数でキーオンの長さを指定値分短く，第二引数でキーオンのタイミングを指定値分遅らせる．192で全音符長，48で４分音符長，12で16分音符長．値省略時/初期値0．【仕様】キーオンディレイ>0 が指定されている状態でスラーを掛けると，前音のキーオンディレイと後音のスラーが無効になる．
+<pre class='example'>
+q8 @q48cr @q24cr @q0cr;  // "q0cr q4cr q8cr"と同じ
+</pre>
+<pre class='example'>
+q8 @q,24 o5c2c2; q0 l8o4[8c]; // キーオンを8分音符分遅らせる
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>&amp;</td>
+            <td class='range'>&nbsp;</td>
+            <td class='desc'><b>(slur)スラー．</b>q/@qによる指定を無効化し，直前の音を次のノート/休符に繋げる．次音発音時エンベロープ/位相はリセットされない．
+<pre class='example'>
+cd&amp;e; // "d"と"e"の間がつながる
+</pre>
+<pre class='example'>
+c&amp;c;   // 位相リセットされないため，継ぎ目が判らない
+</pre>
+<pre class='example'>
+#TABLE0{(0,128)90};na0 c&amp;d&amp;e;   // エンベロープもリセットされない．
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>&amp;&amp;</td>
+            <td class='range'>&nbsp;</td>
+            <td class='desc'><b>(weak slur)弱スラー．</b>q/@qによる指定を無効化し，直前のノートを次のノート/休符に繋げる．次音発音時エンベロープ/位相はリセットされる．
+<pre class='example'>
+c&amp;&amp;c; // 位相リセットされるため，継ぎ目が判る
+</pre>
+<pre class='example'>
+#TABLE0{(0,128)90};na0 c&amp;&amp;d&amp;&amp;e;   // エンベロープもリセットされる．
+</pre>
+            </td>
+          </tr>
+        </tbody></table>
+        <div class='appendex'>
+          <div class='title'>キーオン長の計算式</div>
+          <div>
+            'q'と'@q'は互いに独立していて，下記式で計算される．[キーオン長]が負値の場合，0に設定される．<br/>
+            [キーオン長] = [ノート音長] x ['q'指定値] / 8 - (['@q'第一引数] + ['@q'第二引数])
+          </div>
+        </div>
+      </div>
+      
+      <h3>音量関連</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state'>Statement</th>
+            <th class='range'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>v<i>n</i></td>
+            <td class='range'>0 - 32(%v第二引数に依存) (16)</td>
+            <td class='desc'><b>(<u>V</u>olume)ボリューム．</b>%v無指定時，v0で無音，v16で最大値，v16-32でディストーション．値省略時/初期値16．
+<pre class='example'>
+%5 v4c v8c v12c v16c v20c v24c v28c v32c;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>[()]<i>n</i></td>
+            <td class='range'>1 - 32(%v第二引数に依存) (1)</td>
+            <td class='desc'><b>(volume shift)ボリュームシフト．</b>相対ボリューム．数値でシフトするボリュームを指定可．値省略時1．デフォルトは'('でボリューム上げ，')'でボリューム下げ．'#REV' マクロを指定すると符号を反転．
+<pre class='example'>
+v1l8 c(c(c(c(c(c(c(c(c(c(c(c(c(c(c(c)4c)4c)4c)4c;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>x<i>n</i></td>
+            <td class='range'>0 - 128 (128)</td>
+            <td class='desc'><b>(e<u>X</u>pression)エクスプレッション．</b>値省略時/初期値128．x0で無音，x128で最大値．音量テーブルエンベロープ(na,_na)は，このエクスプレッションの値を書き換える．このため，na,_naが指定されると x による指定は無効になる．
+<pre class='example'>
+v8 x32c x64c x96c x128c v4 x32c x64c x96c x128c;  // "v"と"x"は独立
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>%v<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1=0 - 4(0)<br/>n2=0 - 7(4)</td>
+            <td class='desc'><b>(<u>V</u>olume setting)ボリューム設定．</b>第一引数でスケール設定．0で線形，1-4で非線形(対数スケール，それぞれDynamicRange=96dB,64dB,48dB,32dB)．第二引数でvコマンド最大値の指定．ディストーションしない最大値は(256>>第二引数)で計算できる．デフォルト値=4(v最大値16)．この設定はヴォリュームシフトにも適用される．
+<pre class='example'>
+%v3,1 v128c v96c v64c v32c;  // 非線形スケール(dr=48dB)，v最大値128
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>%x<i>n</i></td>
+            <td class='range'>0 - 4(0)</td>
+            <td class='desc'><b>(e<u>X</u>pression setting)エクスプレッション設定．</b>引数でスケール設定．0で線形，1-4で非線形(対数スケール，それぞれDynamicRange=96dB,64dB,48dB,32dB)．このスケールはテーブルエンベロープにも適用される．
+<pre class='example'>
+%x1 x128c x120c x112c x104c;  // 非線形スケール(dr=96dB)
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>@v<i>n1</i>,...<i>n8</i></td>
+            <td class='range'>0 - 128 (n1=64/n2-n8=0)</td>
+            <td class='desc'><b>(m<u>@</u>ster <u>V</u>olume)マスターボリューム/エフェクトセンド．</b>値省略時/初期値n1=64/n2-n8=0．第一引数でチャンネルのマスターボリューム，第2～8引数でEffect slot#1-#7 へのエフェクトセンドレベルを指定する．
+<pre class='example'>
+@v64 v4c v8c v12c v16c @v32 v4c v8c v12c v16c;  // "@v"と"v"(と"x")は独立
+</pre>
+<pre class='example'>
+#EFFECT1{chorus}; @v64,32 cde;  // エフェクトスロット#1(chorus)にlevel=32でエフェクトセンド
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>p<i>n</i></td>
+            <td class='range'>0 - 8 (4)</td>
+            <td class='desc'><b>(<u>P</u>anning)パン．</b>'p0'で左のみ発音．'p4'でセンター．'p8'で右のみ発音．<br/>['@p'指定値] = (['p'指定値] - 4) x 16．
+<pre class='example'>
+p0c p2c p4c p6c p8c;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>@p<i>n</i></td>
+            <td class='range'>-64 - 64 (0)</td>
+            <td class='desc'><b>(fine <u>P</u>anning)詳細パン．</b>p-64で左のみ発音．p0でセンター．p64で右のみ発音．値省略時/初期値0．
+<pre class='example'>
+@p-64c @p-32c @p0c @p32c @p64c;
+</pre>
+            </td>
+          </tr>
+        </tbody></table>
+        <div class='appendex'>
+          <div class='title'>ボリュームの計算式</div>
+          <div>
+            [線形モードモノラル出力] = (['v'指定値] / (256>>['%v'第二引数])) x (['x'指定値] / 128)<br/>
+            [非線形モードモノラル出力] = -((['v'指定値] / (256>>['%v'第二引数])) x [96,64,48,32]['%v'第一引数-1] + (['x'指定値] / 128) x [96,64,48,32]['%x'指定値-1])dB<br/>
+            [ステレオ左出力] = [モノラル出力] x (['@v'指定値] / 128) x cos((['@p'指定値] + 64) / 128 x PI/2)<br/>
+            [ステレオ右出力] = [モノラル出力] x (['@v'指定値] / 128) x sin((['@p'指定値] + 64) / 128 x PI/2)<br/>
+            @oで指定したパイプと，%eモジュールで受け取る出力には，モノラル出力が用いられる，@v, @pの値は無視される．<br/>
+          </div>
+        </div>
+      </div>
+
+      <h3>音色関連</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state'>Statement</th>
+            <th class='range'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>%<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 9 (0)<br/>n2; 0 - 7 (0)</td>
+            <td class='desc'><b>(module)音源モジュール選択．</b>第一引数で音源の種類，第二引数でチャンネル番号を指定する．選択したモジュールによって'@'第一引数の意味が変化する．また，%を指定すると オペレータ数=1 にリセットされる．
+<pre class='example'>
+%0c %1c %2c %3c;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>@<i>n1</i>,...<i>n15</i></td>
+            <td class='range'>n1; 0 - 1023 (0)</td>
+            <td class='desc'><b>(tone)音色選択/設定．</b>音色選択とオペレータの設定，15引数(省略可)．音源モジュール("%"コマンド指定値)によって第一引数の意味が異なる．
+<pre class='example'>
+%5 @0c @1c @2c @3c @4c @5c @6c @7c; // 第一引数で波形選択
+</pre>
+<pre class='example'>
+@0,32,28,28,28,2,0 cde;   // エンベロープ指定
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>@f<i>n1</i>,...<i>n10</i></td>
+            <td class='range'>n1; 0 - 128 (128)<br/>n2; 0 - 9 (0)</td>
+            <td class='desc'><b>(<u>F</u>ilter)フィルタ設定．</b>フィルタとエンベロープの設定．第一引数でカットオフ，第二引数でレゾナンスを指定．10引数(省略可)．
+<pre class='example'>
+%2 @f64,3 q0 c;   // カットオフ=64, レゾナンス=3 でノイズ
+</pre>
+<pre class='example'>
+@f0,2,32,32,32 cde;    // エンベロープ指定
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>%f<i>n</i></td>
+            <td class='range'>n; 0,1,2 (0)</td>
+            <td class='desc'><b>(<u>F</u>ilter)フィルタモード．</b>0=ローパス, 1=バンドパス，2=ハイパスフィルタに設定．
+<pre class='example'>
+%f2 @f96 cde;   // ハイパスフィルタ
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>s<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 63 (28)<br/>n2; -256 - 255 (0)</td>
+            <td class='desc'><b>(<u>S</u>ustain sweep)リリース設定．</b>第一引数で全ファイナルキャリアのRelease Rateを変更する．第二引数でキーオフ後のピッチスイープを指定する．<br/>[スイープ速度[半音/frame]] = [第二引数] / 21
+<pre class='example'>
+q4 s63cr s32cr s24cr s20cr s12cr;
+</pre>
+<pre class='example'>
+q4 s28,-32cde;    // スイープ
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>@al<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 1 - 4 (1)<br/>n2; 0 - 15 (0)</td>
+            <td class='desc'><b>(<u>AL</u>gorism)オペレータの接続の指定．</b>第１引数でオペレータ数，第２引数で接続アルゴリズムを指定する．オペレータ数の初期値は1．この場合，TSSCPと同様1チャンネルで1つの波形生成を行い，接続アルゴリズムは無視される．このコマンドを指定すると，全オペレータが初期値にリセットされる．第２引数省略時のデフォルト値は，全オペレータ並列アルゴリズム(2ope;alg=1, 3ope;alg=5, 4ope;alg=7)．
+<pre class='example'>
+%5 @al2,0 cde;  // 2ope FM接続;o1(o0)
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>@fb<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 7 (0)<br/>n2; 0 - 3 (0)</td>
+            <td class='desc'><b>(<u>F</u>eed<u>B</u>ack)フィードバック設定．</b>第１引数でフィードバック量，第２引数でフィードバックを返すオペレータを指定する．フィードバックが返されるオペレータは0番で固定されており，多段フィードバックを指定する場合は，第２引数で0以外を指定する．
+<pre class='example'>
+%5 @al2,0 @fb5,1 cde;  // 2段フィードバック;o1(o0(o1))
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>i<i>n</i></td>
+            <td class='range'>0 - 3 (最後のオペレータ)</td>
+            <td class='desc'><b>(operator <u>I</u>ndex)オペレータ指定．</b>後続の '@','@rr','@tl','@ml','@dt','@ph','@fx','@se'コマンドでパラメータ設定するオペレータを指定する．'@al'の第一引数で指定したオペレータ数より大きい場合，最後のオペレータ(4オペレータなら#3)が指定される．
+<pre class='example'>
+%5 @al2 i0@0 i1@1 cde;   // 2ope 並列出力で op0;sin op1;saw を出力
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>@rr<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1;0 - 63 (28)<br/>n2;-256 - 255 (0)</td>
+            <td class='desc'><b>(@ <u>R</u>elease <u>R</u>ate)'@'の第5パラメータと同等．</b>第二引数でキーオフ後のピッチスィープを指定．1オペレータの場合は's'と同じ．</td>
+          </tr>
+          <tr>
+            <td class='state'>@tl<i>n</i></td>
+            <td class='range'>0 - 127 (0)</td>
+            <td class='desc'><b>(@ <u>T</u>otal <u>L</u>evel)'@'の第7パラメータと同等．</b></td>
+          </tr>
+          <tr>
+            <td class='state'>@ml<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1;0 - 15 (1)<br/>n2;-128 - 127 (0)</td>
+            <td class='desc'><b>(@ <u>M</u>u<u>L</u>tiple)'@'の第10パラメータと同等．</b>第二引数で非整数倍音multipleの指定．<br/>[周波数比] = [第一引数(0の場合→0.5)] + [第二引数] / 128</td>
+          </tr>
+          <tr>
+            <td class='state'>@dt<i>n</i></td>
+            <td class='range'>-8192 - 8191 (0)</td>
+            <td class='desc'><b>(@ <u>D</u>e<u>T</u>une)'@'の第12パラメータと同等．</b>'k'は全てのオペレータに対して設定を行うのに対して，'@dt'は'i'で指定した特定のオペレータに対して設定を行う．</td>
+          </tr>
+          <tr>
+            <td class='state'>@ph<i>n</i></td>
+            <td class='range'>-1 - 255 (0)</td>
+            <td class='desc'><b>(@ <u>PH</u>ase)'@'の第14パラメータと同等．</b></td>
+          </tr>
+          <tr>
+            <td class='state'>@fx<i>n</i></td>
+            <td class='range'>0 - 127 (0)</td>
+            <td class='desc'><b>(@ <u>F</u>i<u>X</u>ed note)'@'の第15パラメータと同等．</b></td>
+          </tr>
+          <tr>
+            <td class='state'>@se<i>n</i></td>
+            <td class='range'>0 - 17 (0)</td>
+            <td class='desc'><b>(@ <u>S</u>SG <u>E</u>nvelpe control)OPNA の SSGEC レジスタ相当．</b>16,17は拡張．16;同じ音量で繰り返す8番エンベロープ，17;同じ音量で繰り返す12番エンベロープ．</td>
+          </tr>
+          <tr>
+            <td class='state'>@er<i>n</i></td>
+            <td class='range'>0 , 1</td>
+            <td class='desc'><b>(@ <u>E</u>nvelop <u>R</u>eset)エンベロープリセット．</b>1でアタック開始時にエンベロープレベルをリセットする．全オペレータに対して変更．初期値/デフォルト値0．</td>
+          </tr>
+        </tbody></table>
+        <div class='appendex'>
+          <div class='title'>'%','@'の第1引数</div>
+          <div>
+            '%'第一引数でモジュールを選択し，'@'第一引数で音色番号を選択する．音色番号は選択したモジュールによって異なる．<br/>*番号クリックでサンプル再生
+            <table><tbody>
+              <tr>
+                <th width='120'>'%'第一引数</th>
+                <th>'@'第一引数</th>
+              </tr>
+              <tr>
+                <td>'%0' PSG</td>
+                <td><b>AY-3-8910/SN76489 相当．</b>PSG音程モード(高音でオンチ/範囲が狭い)になる．@0-2で音色指定．
+                  <table class='no_border'><tbody>
+                    <tr><td class='tone'>@0: <span class='mml'>%0@0cde</span></td><td>矩形波</td></tr>
+                    <tr><td class='tone'>@1: <span class='mml'>#TABLE0{(0,16)16};%0@1nt0,20q8o0c1^1^1</span></td><td>PulseNoise(o0c - o2g+ が NoisePeriod = 0-31 に対応)</td></tr>
+                    <tr><td class='tone'>@2: <span class='mml'>%0@2cde</span></td><td>PeriodicNoise(ピッチ指定)</td><tr>
+                   </tbody></table>
+                </td>
+              </tr>
+              <tr>
+                <td>'%1' FC</td>
+                <td><b>ファミコン音源 pAPU(2a03) 相当．</b>PSG音程モード(高音でオンチ/範囲が狭い)になる．@0-11で音色指定．
+                  <table class='no_border'><tbody>
+                    <tr><td class='tone'>@0-7: <span class='mml'>#TABLE0{(0,8)8};%1@@0,20q8c1.</span></td><td>デューティ比指定矩形波．[デューティ比]=[指定値]x12.5%．@0なら出力は常に-1．</td></tr>
+                    <tr><td class='tone'>@8: <span class='mml'>%1@8cde</span></td></td><td>ファミコン三角波(8bitクオンタイズ三角波)</td></tr>
+                    <tr><td class='tone'>@9: <span class='mml'>#TABLE0{(0,16)16};%1@9nt0,20q8o0c1^1^1</span></td><td>PulseNoise(o0c - o1d+ が NoisePeriod = 0-15 に対応)</td><tr>
+                    <tr><td class='tone'>@10: <span class='mml'>#TABLE0{(0,16)16};%1@10nt0,20q8o0c1^1^1</span></td><td>93bitNoise(o0c - o1d+ が NoisePeriod = 0-15 に対応)</td></tr>
+                    <tr><td class='tone'>@11: <span class='mml'></span></td><td>PCM呼出．"%7@0" と同等</td></tr>
+                  </tbody></table>
+                </td>
+              </tr>
+              <tr>
+                <td>'%2' Noise</td>
+                <td><b>ノイズユニット．</b>@0-15でノイズ種類指定．周波数は'o5a'がオリジナル(サンプリング長=16k)．
+                  <table class='no_border'><tbody>
+                    <tr><td class='tone'>@0: <span class='mml'>%2@0c</span></td><td>WhiteNoise</td></tr>
+                    <tr><td class='tone'>@1: <span class='mml'>%2@1c</span></td><td>PulseNoise（1/-1 の2値ノイズ）</td></tr>
+                    <tr><td class='tone'>@2: <span class='mml'>%2@2c</span></td><td>93bitNoise（15bit LFSR の bit0^bit6 をローテートシフトした際のbit0の値を出力）</td></tr>
+                    <tr><td class='tone'>@3: <span class='mml'>%2@3c</span></td><td>Hi-pass Noise（WhiteNoiseに対して，低周波カットフィルタをかけたノイズ）</td></tr>
+                    <tr><td class='tone'>@4: <span class='mml'>%2@4c</span></td><td>PinkNoise(1/fノイズ)</td></tr>
+                    <tr><td class='tone'>@5: <span class='mml'>%2@5c</span></td><td>128bit Noise (Short noise from 16bit LFSR)</td><tr>
+                    <tr><td class='tone'>@6-7: <span class='mml'></span></td><td>(reserved)</td><tr>
+                    <tr><td class='tone'>@8: <span class='mml'>%2@8cde</span></td><td>PeriodicNoise（16bit LFSR の bit0 をローテートシフトした際のbit0の値を出力．ノートによるピッチ指定）</td></tr>
+                    <tr><td class='tone'>@9: <span class='mml'>%2@9cde</span></td><td>93bitNoise（ノートによるピッチ指定）</td></tr>
+                    <tr><td class='tone'>@10-15: <span class='mml'></span></td><td>(reserved)</td></tr>
+                  </tbody></table>
+                 </td>
+              </tr>
+              <tr>
+                <td>'%3' MA3</td>
+                <td><b>携帯向け音源 YMU762 の波形(@0-7までOPL3/OPXと同じ) 相当．</b>@0-31で波形番号を指定．
+                  <table class='no_border'><tbody>
+                    <tr><td class='tone'>@0: <span class='mml'>%3@0cde</span></td><td>sin(p)</td></tr>
+                    <tr><td class='tone'>@1: <span class='mml'>%3@1cde</span></td><td>(p&lt;PI)?sin(p):0</td></tr>
+                    <tr><td class='tone'>@2: <span class='mml'>%3@2cde</span></td><td>abs(sin(p))</td></tr>
+                    <tr><td class='tone'>@3: <span class='mml'>%3@3cde</span></td><td>(p&lt;PI/2||(PI&lt;=p&amp;&p&lt;PI*3/2))?abs(sin(p)):0</td></tr>
+                    <tr><td class='tone'>@4: <span class='mml'>%3@4cde</span></td><td>(p&lt;PI)?sin(2p):0</td></tr>
+                    <tr><td class='tone'>@5: <span class='mml'>%3@5cde</span></td><td>(p&lt;PI)?abs(sin(2p)):0</td></tr>
+                    <tr><td class='tone'>@8-13: <span class='mml'>#TABLE0{(0,6)6}+8;%3@@0,20q8c1</span></td><td>上記数式のsin(p)を，2倍周期三角波(振幅=PI/4)でFM変調</td></tr>
+                    <tr><td class='tone'>@16-21: <span class='mml'>#TABLE0{(0,6)6}+16;%3@@0,20q8c1</span></td><td>上記数式のsin(p)を，triw(p)に変更</td></tr>
+                    <tr><td class='tone'>@24-29: <span class='mml'>#TABLE0{(0,6)6}+24;%3@@0,20q8c1</span></td><td>上記数式のsin(p)を，saww(p)(upward saw)に変更</td></tr>
+                    <tr><td class='tone'>@6: <span class='mml'>%3@6cde</span></td><td>(p&lt;PI)?1:-1</td></tr>
+                    <tr><td class='tone'>@14: <span class='mml'>%3@14cde</span></td><td>(p&lt;PI)?1:0</td></tr>
+                    <tr><td class='tone'>@22: <span class='mml'>%3@22cde</span></td><td>(p&lt;PI/2||(PI&lt;=p&amp;&p&lt;PI*3/2))?1:0</td></tr>
+                    <tr><td class='tone'>@30: <span class='mml'>%3@30cde</span></td><td>(p&lt;PI/2)?1:0</td></tr>
+                    <tr><td class='tone'>@7: <span class='mml'>%3@7cde</span></td><td>(p&lt;PI*0.5)?1-sin(p):(p>PI*1.5)?-1-sin(p):0</td></tr>
+                    <tr><td class='tone'>@15,23,31 : <span class='mml'></span></td><td>%4@[0-2]と同等．</td></tr>
+                  </tbody></table>
+                </td>
+              </tr>
+              <tr>
+                <td>'%4' WaveTable</td>
+                <td><b>コナミSCC音源/YMU762カスタム波形相当．</b>#WAV, #WAVB で設定した波形を呼び出す．@0-255で波形番号を指定．</td>
+              </tr>
+              <tr>
+                <td>'%5' all</td>
+                <td><b>全波形の指定．</b>@0-511 で波形番号を指定．
+                  <table class='no_border'><tbody>
+                    <tr><td class='tone'>@0: <span class='mml'>%5@0cde</span></td><td>sin波</td></tr>
+                    <tr><td class='tone'>@1: <span class='mml'>%5@1cde</span></td><td>のこぎり波(upward saw)</td></tr>
+                    <tr><td class='tone'>@2: <span class='mml'>%5@2cde</span></td><td>のこぎり波(downward saw)</td></tr>
+                    <tr><td class='tone'>@3: <span class='mml'>%5@3cde</span></td><td>ファミコン三角波(8bitクオンタイズ)</td></tr>
+                    <tr><td class='tone'>@4: <span class='mml'>%5@4cde</span></td><td>三角波</td></tr>
+                    <tr><td class='tone'>@5: <span class='mml'>%5@5cde</span></td><td>矩形波</td></tr>
+                    <tr><td class='tone'>@6: <span class='mml'>%5@6cde</span></td><td>ホワイトノイズ(@16と同)</td></tr>
+                    <tr><td class='tone'>@7: <span class='mml'>%5@7cde</span></td><td>(reserved) ... ?</td></tr>
+                    <tr><td class='tone'>@8: <span class='mml'>%5@8cde</span></td><td>スードシンク(低周波)．output = -p/2PI</td></tr>
+                    <tr><td class='tone'>@9: <span class='mml'>%5@9cde</span></td><td>スードシンク(高周波)．output = p/2PI</td></tr>
+                    <tr><td class='tone'>@10: <span class='mml'>%5@10cde</span></td><td>オフセット．output = 1</td></tr>
+                    <tr><td class='tone'>@11-15: <span class='mml'></span></td><td>(reserved)</td></tr>
+                    <tr><td class='tone'>@16-31: <span class='mml'>#TABLE0{(16,32)16};%5@@0,20q8c1^1^1</span></td><td>ノイズ波．%2@([指定値]-16)と同等</td></tr>
+                    <tr><td class='tone'>@32-63: <span class='mml'>#TABLE0{(32,64)32};%5@@0,10q8c1^1^1</span></td><td>MA3波形． %3@([指定値]-32)と同等</td></tr>
+                    <tr><td class='tone'>@64-95: <span class='mml'>#TABLE0{(64,96)32};%5@@0,10q8c1^1^1</span></td><td>パルス波．%8@([指定値]-64)と同等</td></tr>
+                    <tr><td class='tone'>@96-127: <span class='mml'></span></td><td>(reserved)</td></tr>
+                    <tr><td class='tone'>@128-255: <span class='mml'>#TABLE0{(128,256)128};%5@@0,4q8c1^1^1^1</span></td><td>ランプ波．%9@([指定値]-128)と同等</td></tr>
+                    <tr><td class='tone'>@256-511: <span class='mml'></span></td><td>WaveTable波形を指定．%4@([指定値]-256)と同等</td></tr>
+                  </tbody></table>
+                </td>
+              </tr>
+              <tr>
+                <td>'%6' FM</td>
+                <td><b>FM音源エミュレーション．</b>#@, #OPL@, #OPM@, #OPN@, #OPX@, #MA@ で設定した音色を呼び出す．@0-255で音色番号を指定．</td>
+              </tr>
+              <tr>
+                <td>'%7' PCM</td>
+                <td><b>PCM音源．</b>内部でロードしたmp3ファイルをPCM再生．@0-255で波形番号を指定．周波数は'o5a'がオリジナル．
+                  <table class='no_border'><tbody>
+                    <tr><td class='tone'>@0(sample)<span class='mml'>%7@0l8c.c.gf.f.&lt;c&gt;rccgf.f.&lt;c</span></td><td>※内部でmp3データを読み込んでいます．</td></tr>
+                  </tbody></table>
+                </td>
+              </tr>
+              <tr>
+                <td>'%8' Pulse</td>
+                <td><b>パルス波．</b>@0-15/@16-31でデューティ比を指定．
+                  <table class='no_border'><tbody>
+                    <tr><td class='tone'>@0-15: <span class='mml'>#TABLE0{(0,16)16};%8@@0,20q8c1^1^1</span></td><td>2値パルス波．output = (p&lt;PI/8*[index])?1:-1;</td></tr>
+                    <tr><td class='tone'>@16-31: <span class='mml'>#TABLE0{(16,32)16};%8@@0,20q8c1^1^1</span></td><td>3値パルス波．output = (p&lt;PI/16*([index]-16))?1:(p&lt;PI/8*([index]-16))?-1:0;</tr>
+                  </tbody></table>
+                </td>
+              </tr>
+              <tr>
+                <td>'%9' Ramp</td>
+                <td><b>ランプ波．</b>のこぎり波と三角波の間の波形．@0=のこぎり波(upward)→@64=三角波→@127=のこぎり波(downward)
+                  <table class='no_border'><tbody>
+                    <tr><td class='tone'>@0-63: <span class='mml'>#TABLE0{(0,64)64};%9@@0,2q8c1^1</span></td><td>@0=のこぎり波(upward)→@64=三角波</td></tr>
+                    <tr><td class='tone'>@64-127: <span class='mml'>#TABLE0{(64,128)64};%9@@0,2q8c1^1</span></td><td>@64=三角波→@127=のこぎり波(downward)</tr>
+                  </tbody></table>
+                </td>
+              </tr>
+              <tr>
+                <td>'%10' Sampler</td>
+                <td><b>サンプラー．</b>内部でロードしたmp3ファイルを再生．MIDIのドラムチャンネルのように各ノートに違う波形をアサイン可能．
+                  <table class='no_border'><tbody>
+                    <tr><td class='tone'>@0(sample)<span class='mml'>%10v16l8cre4cce.c16rc16c16ercce.e16;%10o4l16[v16c8cv12c]8v16f1</span></td><td>※内部でmp3データを読み込んでいます．</td></tr>
+                  </tbody></table>
+                </td>
+              </tr>
+              <tr>
+                <td>'%11' PMS Guitar</td>
+                <td><b>物理音源ギター．</b>Karplus-Strong アルゴリズムによるギター物理音源．
+                  <table class='no_border'><tbody>
+                    <tr><td class='tone'>@0,48,48,0,0,20s8(default)<span class='mml'>%11@ph-1o3e1^1^2^8;%11@ph-1o3r8a1^1^2;%11@ph-1o4r4d1^1^4.;%11@ph-1r4.o4g1^1^4;%11@ph-1r2o4b1^1;%11@ph-1r8^2o5e1^1^8;</span></td><td>ナイロン弦ギター</td></tr>
+                    <tr><td class='tone'>@0,48,48,0,0,16s4<span class='mml'>#T=%11@0,48,48,0,0,16s4@ph-1q8;t160;To3v12a1^1;To4v8r64e1^1;To4v7r32a1^1;To4v7r32.b1^1;To5v6r16e1^1;</span></td><td>スチール弦ギター</td></tr>
+                    <tr><td class='tone'>@0,48,40,4,0,16s6@f96,0<span class='mml'>#EFFECT0{chorus delay};#T=%11@0,48,40,4,0,16s6@ph-1@f96,0q8;t160;To3v12$a1^1;To4v8r4$e1^1;To4v7r4.$a4a4a2a4a4a2;To4v7r2.$b2b2b1;To5v6r1$e1^1;</span></td><td>クリーンギター(+Chorus)</td></tr>
+                    <tr><td class='tone'>@0,48,24,8,0,17s2@f80<span class='mml'>#T=%11@0,48,24,8,0,17s2@f80mp0,6,10,10@ph-1@v64,16;t160;#M=o3q8l8aga&lt;c^2&gt;aga&lt;c*d0rc4.&gt;aga&lt;d*edc&gt;s,-63a1^1;Tv12M;Tv8kt7M;</span></td><td>ディストーションギター</td></tr>
+                    <tr><td class='tone'>@0,48,40,4,80,18s32<span class='mml'>t144;%11@0,48,40,4,80,18s32q8o2q8l8$v16av12a&lt;c16cc+s40c+16s32deg&gt;a16&lt;s48a16&gt;s32a&lt;c&c+16de16&gt;v8s48ev12s32f+g+;</span></td><td>スラップベース</td></tr>
+                  </tbody></table>
+                </td>
+              </tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class='appendex'>
+          <div class='title'>'@'の第2-15引数(%10,%11以外)</div>
+          <div>
+            '@'コマンドは15引数を持ち，オペレータの出力設定を行う．
+            第一引数で音色選択，第2-7引数でエンベロープ，第8,9引数でキースケール，第10-12引数で周波数，第13-15引数でその他設定．基本的にFM音源オペレータのパラメータと同等．
+            @コマンドの第2～15パラメータが省略された場合，それらの値は変更されない．%6の場合，i コマンドで指定した operator に適用される．
+            <pre class='formula'>@ <i>[ws], [ar], [dr], [sr], [rr], [sl], [tl], [ksr], [ksl], [mul], [dt1], [detune], [ams], [phase], [fixed pitch]</i></pre>
+            <table class='no_border'><tbody>
+              <tr>
+                <td>n1; </td>
+                <td><b>(Wave Shape)</b>音色設定[0-1023]．前項を参照．</td>
+              </tr>
+              <tr>
+                <td>n2; </td>
+                <td><b>(Attack Rate)</b>キーオン後の増幅を指定[0-63(63)]．小さい値ほど遅い．63で即時Total Level．0で立ち上がらない(無音)．</td>
+              </tr>
+              <tr>
+                <td>n3; </td>
+                <td><b>(Decay Rate)</b>Total Level 到達後の減衰を指定[0-63(0)]．小さい値ほど遅い．63で即時Sustain Level．0でキーオフまで最大音量を維持．</td>
+              </tr>
+              <tr>
+                <td>n4; </td>
+                <td><b>(Sustain Rate)</b>Sustain Level 到達後の音の減衰を指定[0-63(0)]．小さい値ほど遅い．63で即時消音．0でキーオフまでSustain Levelを維持．</td>
+              </tr>
+              <tr>
+                <td>n5; </td>
+                <td><b>(Release Rate)</b>キーオフ後の減衰を指定[0-63(28)]．小さい値ほど遅い．63で即時消音．0で次のノート発音まで出音を維持．'@rr'でも設定可．</td>
+              </tr>
+              <tr>
+                <td>n6; </td>
+                <td><b>(Sustain Level)</b>変化速度をdr->srに変更する点の音量を最大音量との相対値で指定[0-15(0)]．[変更点音量]=[指定値]x-1.5[dB] (sl=2で半減)．</td>
+              </tr>
+              <tr>
+                <td>n7; </td>
+                <td><b>(Total Level)</b>エンベロープの最大音量を出力との相対値で指定[0-127(0)]．[最大音量]=[指定値]x-0.375[dB] (tl=8で半減)．'@tl'でも設定可．</td>
+              </tr>
+              <tr>
+                <td>n8; </td>
+                <td><b>(Key Scale Rate)</b>高ピッチでエンベロープを早くする[0-3(0)]．ksr=0ならオクターブにつき約0.4レート値を上げる, ksr=1;0.8, ksr=2;1.6, ksr=3;3.2．</td>
+              </tr>
+              <tr>
+                <td>n9; </td>
+                <td><b>(Key Scale Level)</b>高ピッチでTotal Levelを下げる[0-3(0)]．ksl=0でオフ．ksl=1;-0.15[dB/oct]，ksl=2;-0.3[dB/oct]，ksl=3;-0.6[dB/oct]．</td>
+              </tr>
+              <tr>
+                <td>n10; </td>
+                <td><b>(Multiple)</b>再生周波数を指定値倍する[0-15(1)]．mul=0は0.5倍．'@ml'でも設定可．</td>
+              </tr>
+              <tr>
+                <td>n11; </td>
+                <td><b>(Detune1)</b>opm/opnの'dt1'相当[0-7(0)]．再生周波数を微調整する．0-3でピッチ上，4-7でピッチ下げ．</td>
+              </tr>
+              <tr>
+                <td>n12; </td>
+                <td><b>(Detune)</b>再生ピッチをシフトする[-8192-8191(0)]．64=1半音．'@dt'でも設定可．</td>
+              </tr>
+              <tr>
+                <td>n13; </td>
+                <td><b>(Amplitude Modulation Shift)</b>音量モジュレーション(ma)による音量変化の度合いを指定する[0-3(1)]．ams=0でオフ．</td>
+              </tr>
+              <tr>
+                <td>n14; </td>
+                <td><b>(Phase)</b>キーオン時の位相を指定する[-1-255(0)]．255ならキーオン時に位相をリセットしない，-1なら乱数．[初期位相]=[指定値]/128*PI．'@ph'でも設定可．</td>
+              </tr>
+              <tr>
+                <td>n15; </td>
+                <td><b>(Fixed note)</b>オペレータのピッチを固定する．0ならピッチを固定しない．[fixed note]=60 で o5c．'@fx'でも設定可．</td>
+              </tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class='appendex'>
+          <div class='title'>'@al'の引数(システムコマンド'#@'の第１引数)</div>
+          <div>
+            '@al'コマンドは2引数を持ち，オペレータ数と各オペレータの接続の設定を行う．第２引数を省略した場合，全オペレータ並列アルゴリズム(2ope;alg=1, 3ope;alg=5, 4ope;alg=7)が選択される．*各オペレータ#0のフィードバック接続位置は"@fb"の第２引数により変更できるが，便宜上セルフフィードバックとして記述してある．<br/>
+            <table><tbody>
+              <tr>
+                <th>オペレータ数</th>
+                <th>アルゴリズム</th>
+              </tr>
+              <tr>
+                <td>1</td><td><img src='./image/opc1alg.png'/></td>
+              </tr>
+              <tr>
+                <td>2</td><td><img src='./image/opc2alg.png'/></td>
+              </tr>
+              <tr>
+                <td>3</td><td><img src='./image/opc3alg.png'/></td>
+              </tr>
+              <tr>
+                <td>4</td><td><img src='./image/opc4alg.png'/></td>
+              </tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class='appendex'>
+          <div class='title'>FM音色システムコマンドのアルゴリズム変換テーブル</div>
+          <div>
+            各FM音色システムコマンドの接続アルゴリズム(第一引数)の値は，下記のテーブルによって内部で@alコマンドに変換される．<br/>
+            <table>
+              <thead>#OPM@/#OPN@</thead>
+              <tbody>
+                <tr><th>    </th><th>alg:0</th> <th>alg:1</th> <th>alg:2</th> <th>alg:3</th> <th>alg:4</th> <th>alg:5</th> <th>alg:6</th> <th>alg:7</th> </tr>
+                <tr><th>2ope</th><td>@al2,0</td><td>@al2,1</td><td>@al2,1</td><td>@al2,1</td><td>@al2,1</td><td>@al2,0</td><td>@al2,1</td><td>@al2,1</td></tr>
+                <tr><th>3ope</th><td>@al3,0</td><td>@al3,1</td><td>@al3,2</td><td>@al3,3</td><td>@al3,3</td><td>@al3,4</td><td>@al3,3</td><td>@al3,5</td></tr>
+                <tr><th>4ope</th><td>@al4,0</td><td>@al4,1</td><td>@al4,2</td><td>@al4,3</td><td>@al4,4</td><td>@al4,5</td><td>@al4,6</td><td>@al4,7</td></tr>
+              </tbody>
+            </table>
+            <table>
+              <thead>#OPL@</thead>
+              <tbody>
+                <tr><th>    </th><th>alg:0</th> <th>alg:1</th> <th>alg:2</th> <th>alg:3</th> <th>alg:4</th> <th>alg:5</th> <th>alg:6</th> <th>alg:7</th> </tr>
+                <tr><th>2ope</th><td>@al2,0</td><td>@al2,1</td><td>error </td><td>error </td><td>error </td><td>error </td><td>error </td><td>error </td></tr>
+                <tr><th>3ope</th><td>@al3,0</td><td>@al3,3</td><td>@al3,2</td><td>@al3,2</td><td>error </td><td>error </td><td>error </td><td>error </td></tr>
+                <tr><th>4ope</th><td>@al4,0</td><td>@al4,4</td><td>@al4,8</td><td>@al4,9</td><td>error </td><td>error </td><td>error </td><td>error </td></tr>
+              </tbody>
+            </table>
+            <table>
+              <thead>#MA@</thead>
+              <tbody>
+                <tr><th>    </th><th>alg:0</th> <th>alg:1</th> <th>alg:2</th> <th>alg:3</th> <th>alg:4</th> <th>alg:5</th> <th>alg:6</th> <th>alg:7</th> </tr>
+                <tr><th>2ope</th><td>@al2,0</td><td>@al2,1</td><td>@al2,1</td><td>@al2,1</td><td>@al2,0</td><td>@al2,1</td><td>@al2,1</td><td>@al2,1</td></tr>
+                <tr><th>3ope</th><td>error </td><td>error </td><td>@al3,5</td><td>@al3,2</td><td>@al3,0</td><td>@al3,3</td><td>@al3,2</td><td>@al3,2</td></tr>
+                <tr><th>4ope</th><td>error </td><td>error </td><td>@al4,7</td><td>@al4,2</td><td>@al4,0</td><td>@al4,4</td><td>@al4,8</td><td>@al4,9</td></tr>
+              </tbody>
+            </table>
+            <table>
+              <thead>#OPX@</thead>
+              <tbody>
+                <tr><th>    </th><th>alg:0</th> <th>alg:1</th> <th>alg:2</th> <th>alg:3</th> <th>alg:4</th> <th>alg:5</th> <th>alg:6</th> <th>alg:7</th> <th>alg:8</th> <th>alg:9</th> <th>alg:10</th> <th>alg:11</th> <th>alg:12</th> <th>alg:13</th> <th>alg:14</th> <th>alg:15</th> </tr>
+                <tr><th>2ope</th><td>@al2,0</td><td>@al2,0<br/>@fb0,1</td><td>@al2,1</td><td>@al2,2</td><td>error </td><td>error </td><td>error </td><td>error </td><td>error </td><td>error </td><td>error </td><td>error </td><td>error </td><td>error </td><td>error </td><td>error </td></tr>
+                <tr><th>3ope</th><td>@al3,0</td><td>@al3,0<br/>@fb0,1</td><td>@al3,1</td><td>@al3,2</td><td>@al3,3</td><td>@al3,3<br/>@fb0,1</td><td>@al3,5</td><td>@al3,6</td><td>error </td><td>error </td><td>error </td><td>error </td><td>error </td><td>error </td><td>error </td><td>error </td></tr>
+                <tr><th>4ope</th><td>@al4,0</td><td>@al4,0<br/>@fb0,1</td><td>@al4,1</td><td>@al4,2</td><td>@al4,3</td><td>@al4,3<br/>@fb0,1</td><td>@al4,4</td><td>@al4,4<br/>@fb0,1</td><td>@al4,8</td><td>@al4,11</td><td>@al4,6</td><td>@al4,6<br/>@fb0,1</td><td>@al4,5</td><td>@al4,9</td><td>@al4,12</td><td>@al4,7</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class='appendex'>
+          <div class='title'>'@f'の引数</div>
+          <div>
+            '@f'コマンドは10引数を持ち，第1,2引数で基本的なフィルタ設定，第3-10引数でエンベロープ設定を行う．
+            <pre class='formula'>@f <i>[co], [res], [ar], [dr], [sr], [rr], [co2], [co3], [sc], [rc]</i></pre>
+            <table class='no_border'><tbody>
+              <tr>
+                <td>n1; </td>
+                <td><b>(Cutoff Freq.)</b>カットオフ周波数[0-128(128)]．0で最低周波数，128で全開放．</td>
+              </tr>
+              <tr>
+                <td>n2; </td>
+                <td><b>(Resonance)</b>レゾナンス[0-9(0)]．0で無し，9で最大レゾナンス．</td>
+              </tr>
+              <tr>
+                <td>n3; </td>
+                <td><b>(Attack Rate)</b>アタック[0-63(0)]．Cutoff Freq. → Cutoff Freq.#2 への変化速度．0で無変更(Cutoff Freq.の維持)，63で即時変更．</td>
+              </tr>
+              <tr>
+                <td>n4; </td>
+                <td><b>(Decay Rate)</b>ディケイ[0-63(0)]．Cutoff Freq.#2 → Cutoff Freq.#3 への変化速度．0で無変更(Cutoff Freq.#2の維持)，63で即時変更．</td>
+              </tr>
+              <tr>
+                <td>n5; </td>
+                <td><b>(Sustain Rate)</b>サスティン[0-63(0)]．Cutoff Freq.#3 → Suatain Freq. への変化速度．0で無変更(Cutoff Freq.#3の維持)，63で即時変更．</td>
+              </tr>
+              <tr>
+                <td>n6; </td>
+                <td><b>(Release Rate)</b>リリース[0-63(0)]．キーオフ後の Release Freq. への変化速度．0で無変更(キーオフ時点でのカットオフ周波数の維持)，63で即時変更．</td>
+              </tr>
+              <tr>
+                <td>n7; </td>
+                <td><b>(Cutoff Freq.#2)</b>カットオフ周波数２[0-128(128)]．キーオン後，[Attack Rate] の速度でCutoff Freq.  →Cutoff Freq.#2に移行．</td>
+              </tr>
+              <tr>
+                <td>n8; </td>
+                <td><b>(Cutoff Freq.#3)</b>カットオフ周波数３[0-128(64)]．Cutoff Freq.#2到達後，[Decay Rate]  の速度でCutoff Freq.#2→Cutoff Freq.#3に移行．</td>
+              </tr>
+              <tr>
+                <td>n9; </td>
+                <td><b>(Sustain CutOff)</b>サスティンカットオフ[0-128(32)]．Cutoff Freq.#3到達後，[Suatain Rate]の速度でCutoff Freq.#3→Sustain CutOffに移行．その後，キーオフまでSustain CutOffを維持する．</td>
+              </tr>
+              <tr>
+                <td>n10; </td>
+                <td><b>(Release CutOff)</b>リリースカットオフ[0-128(128)]．[Release Rate]>0の場合，キーオフ後この周波数に移行．</td>
+              </tr>
+            </tbody></table>
+            <img src='./image/filter.png' alt='filter parameters' title='filter parameters'/>
+          </div>
+        </div>
+        <div class='appendex'>
+          <div class='title'>%7;PCM音源 と %10;サンプラー</div>
+          <div>
+            どちらもswf内部でロードしたmp3データを再生しますが，<br/>
+            PCM音源はピッチ可変で，@al/@fb以外のコマンドは通常のFM音源チャンネルと同様に使えます．<br/>
+            一方，サンプラーはピッチ変更不可で，ADSRエンベロープやフィルタを使用できませんが(テーブルエンベロープは可)，各ノートに波形を割り振る事が出来ます．<br/>
+            ※このサンプルでは，内部でmp3データを読み込んでいます．
+<pre class='example'>
+// PCM音源はピッチ可変
+%7@0l8c.c.gf.f.&lt;c&gt;rccgf.f.&lt;c;
+</pre>
+<pre class='example'>
+// サンプラーはノートで波形選択可
+%10v16l8cre4cce.c16rc16c16ercce.e16;
+%10o4l16[v16c8cv12c]8v16f1;
+</pre>
+          </div>
+        </div>
+        <div class='appendex'>
+          <div class='title'>%11;物理音源ギターの音色</div>
+          <div>
+%11の物理音源ギターは，"@","s","@f"コマンドで音色を定義します．<br/><br/>
+"@"コマンドでピッキングの特徴を定義します．このコマンドは第1引数によって，第2引数以降の意味が異なります．<br/>
+<pre class='formula'>@0,<i>[ar],[dr],[tl],[pitch],[ws]</i></pre>
+第1引数が0の場合，以下5引数によって定義します．<br/>
+第2,第3,第4引数は，それぞれピッキングのAttack rate, Decay rate, total levelでエンベロープを定義します．値の意味は，sl=15の場合のFM音源オペレータと同じです．<br/>
+第5引数はピッキング音の音程で，ノート番号で指定します(default=60=o5c)．<br/>
+第6引数はピッキング音に用いる波形番号で，%5の場合の@第1引数で指定します(default=20=pink noise)．通常，撥弦楽器モデリングではピッキング音にノイズ波形を用います．<br/>
+<pre class='formula'>@1,<i>[FM音色番号]</i></pre>
+<pre class='formula'>@2,<i>[PCM波形番号]</i></pre>
+第1引数が1,2の場合，それぞれ，第2引数でFM音色番号，PCM波形番号を指定します．この場合，ピッキングにFM音源,PCM音源の出力音を使う事ができます．<br/><br/>
+"s"コマンドは，弦の倍音の減衰を定義します．sコマンドの第1引数で弦の倍音成分の減衰の早さを指定します．倍音成分自体はピッキングで与える音によってコントロールします．<br/><br/>
+"@f"コマンドは，通常の音色と同様にLPフィルタをかけます．
+          </div>
+        </div>
+      </div>
+      
+      <h3>トリガー</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state'>Statement</th>
+            <th class='range'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>%t<i>n1</i>,<i>n2</i>,<i>n3</i></td>
+            <td class='range'>n1; - (0)<br/>n2; 0 - 3 (1)<br/>n3; 0 - 3 (1)</td>
+            <td class='desc'><b>(event <u>T</u>rigger)イベントトリガー設定．</b>ActionScriptコードと連動するために使用する．第１引数でトリガーID，第２引数でノートオン時のトリガータイプ，第３引数でノートオフ時のトリガータイプを指定．このコマンドを指定後，発音の度にイベントが発生するようになる．</td>
+          </tr>
+          <tr>
+            <td class='state'>%e<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; - (0)<br/>n2; 0 - 3 (1)</td>
+            <td class='desc'><b>(dispatch <u>E</u>vent)イベント発生．</b>ActionScriptコードと連動するために使用する．第１引数でトリガーID，第２引数でトリガータイプを指定．このコマンドのタイミングでノートオンイベントが発生する．</td>
+          </tr>
+        </tbody></table>
+        <div class='appendex'>
+          <div class='title'>イベントトリガー</div>
+          <div>
+            "%t"が指定されると，その後シーケンス内でノート(c-b)が指定される度に，SiONTrackEevnt.NOTE_ON_STREAM, SiONTrackEevnt.NOTE_OFF_STREAM, SiONTrackEevnt.NOTE_ON_FRAME 及び SiONTrackEevnt.NOTE_OFF_FRAME イベントが発行されます．<br/>
+            また，第２/３引数でノートオン/オフ時に発行するイベントの種類を指定します（0=発行しない，1=NOTE_*_FRAMEを発行，2=NOTE_*_STREAMを発行，3=両方発行）．<br/>
+            NOTE_*_STREAM イベントは，ストリーミング時に，そのノートがレンダリングされる直前に発行されます．<br/>
+            一方，NOTE_*_FRAME イベントは，フレーム内でそのノートが発音されるタイミング（に近いタイミング）で発行されます．<br/>
+            "%e"が指定されると，指定されたタイミングで1回だけノートオンイベントが発行されます．引数は同じです．<br/>
+          </div>
+        </div>
+      </div>
+
+      <h3>モジュレーション</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state'>Statement</th>
+            <th class='range'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>@lfo<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 1 - (20)<br/>n2; 0 - 3 (2)</td>
+            <td class='desc'><b>(<u>L</u>ow <u>F</u>requency <u>O</u>scilator)LFO設定．</b>第１引数でLFO周期(60=1[sec])，第２引数で波形(0;downward saw, 1;square, 2;triangle, 3;random, 4-7;0-3の位相反転, 8-255;#TABLE参照)を指定する．#TABLEを参照する場合，メンバは256個，数値範囲は0-255．このコマンドは'mp','ma'を初期化("mp0ma0")するため，'@lfo'後に再設定が必要．
+<pre class='example'>
+@lfo30 mp32c1 @lfo10 mp32c1
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>mp<i>n1</i>,<i>n2</i>,<i>n3</i>,<i>n4</i></td>
+            <td class='range'>n1; 0 - 8191 (0)<br/>n2; 0 - 8192 (0)<br/>n3; 0 - 65535 (0)<br/>n4; 0 - 65535 (0)</td>
+            <td class='desc'><b>(<u>P</u>itch <u>M</u>odulation)音程モジュレーション（ビブラート）設定．</b>'@lfo'で設定したLFOで音程を揺らす．n1(modulation), n2(end modulation) の値は64=1半音．n3(delay), n4(changing time)はフレーム数で指定．
+<pre class='example'>
+mp8,32,60,40 c1^1
+</pre>
+            </td>
+          <tr>
+            <td class='state'>ma<i>n1</i>,<i>n2</i>,<i>n3</i>,<i>n4</i></td>
+            <td class='range'>n1; 0 - 8191 (0)<br/>n2; 0 - 8192 (0)<br/>n3; 0 - 65535 (0)<br/>n4; 0 - 65535 (0)</td>
+            <td class='desc'><b>(<u>A</u>mplitude <u>M</u>odulation)音量モジュレーション（トレモロ）設定．</b>'@lfo'で設定したLFOで音量を揺らす．n1(modulation), n2(end modulation) の値は ams=3 で[modulation振幅値]=[tl値]．モジュレーションの係り具合は，各オペレータのams値に依る．n3(delay), n4(changing time)はフレーム数で指定．
+<pre class='example'>
+ma0,32,60,40 c1^1
+</pre>
+            </td>
+          </tr>
+        </tbody></table>
+        <div class='appendex'>
+          <div class='title'>'mp','ma'の引数</div>
+          <div>
+            キーオン時，第一引数(modulation)で指定した振幅でモジュレーションがかかる．<br/>
+            '第一引数(modulation) < 第二引数(end modulation)' の場合，<br/>
+            その後，第三引数(delay)フレームの間，第一引数(modulation)で指定した振幅を維持し，<br/>
+            その後，第四引数(changing time)フレームで，第二引数(end modulation)で指定した振幅に変化する．<br/>
+            <img src='./image/modulation.png' alt='modulation parameters' title='modulation parameters'/>
+          </div>
+        </div>
+      </div>
+
+      <h3>テーブルエンベロープ</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state'>Statement</th>
+            <th class='range'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>@fps<i>n</i></td>
+            <td class='range'>1 - 1000 (#FPS設定値)</td>
+            <td class='desc'><b>(<u>F</u>rame <u>P</u>er <u>S</u>econd)エンベロープ/LFO変化速度の設定．</b>'@@','na','np','nt','nf','_@@','_na','_np','_nt','_nf','po','@rr'の第２引数,'mp'/'ma'の変化時間 の実行速度をFrame per secondで設定する．
+<pre class='example'>
+#TABLE0{(0,12)30}; q8 nt0 @fps30 c1 @fps120 c1;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>@@<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 255 (255)<br/>n2; 1 - 65535 (1)</td>
+            <td class='desc'><b>(tone envelop)音色エンベロープ．</b>キーオン中の'@'第１引数をテーブルでコントロールする．'@'の書き換えを行う．
+<pre class='example'>
+#TABLE0{(0,32)32}; q8 %3 @@0,5 c1^1;  // '%3@0'から'%3@31'まで5フレーム毎に音色変更．
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>na<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 255 (255)<br/>n2; 1 - 65535 (1)</td>
+            <td class='desc'><b>(<u>A</u>mplitude <u>EN</u>velop)音量エンベロープ．</b>キーオン中の'x'指定値をテーブルでコントロールする．'x'の書き換えを行う．
+<pre class='example'>
+#TABLE0{(128,0)10 (64,0)10|(32,0)10}; na0q8 l2cde;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>np<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 255 (255)<br/>n2; 1 - 65535 (1)</td>
+            <td class='desc'><b>(<u>P</u>itch <u>EN</u>velop)音程エンベロープ．</b>キーオン中の'k'指定値をテーブルでコントロールする．'k'と独立して設定可能．
+<pre class='example'>
+#TABLE0{(0,128,-64,0)60}; np0q8 c1;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>nt<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 255 (255)<br/>n2; 1 - 65535 (1)</td>
+            <td class='desc'><b>(no<u>T</u>e <u>EN</u>velop)ノートエンベロープ．</b>キーオン中の'kt'指定値をテーブルでコントロールする．'kt'と独立して設定可能．
+<pre class='example'>
+#TABLE0{|0,4,7}; nt0 cde; // 分散コード
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>nf<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 255 (255)<br/>n2; 1 - 65535 (1)</td>
+            <td class='desc'><b>(<u>F</u>ilter <u>EN</u>velop)フィルターエンベロープ．</b>キーオン中の'@f'第１引数をテーブルでコントロールする．'@f'と独立して設定可能．
+<pre class='example'>
+#TABLE0{|(128,64,128)20}; nf0 c1; // ワウ
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>_@@<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 255 (255)<br/>n2; 1 - 65535 (1)</td>
+            <td class='desc'><b>(release tone envelop)音色リリースエンベロープ．</b>キーオフ後にテーブルエンベロープを適用する．
+<pre class='example'>
+#TABLE0{|1,5};q4 %5 _@@0 cdef;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>_na<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 255 (255)<br/>n2; 1 - 65535 (1)</td>
+            <td class='desc'><b>(release <u>A</u>mplitude <u>EN</u>velop)音量リリースエンベロープ．</b>キーオフ後にテーブルエンベロープを適用する．'x'の書き換えを行う．'@rr/s'と独立しているため，'_na'のみでリリースエンベロープをコントロールする場合はリリース時の減衰を0('s0')にする必要がある．
+<pre class='example'>
+#TABLE0{32}; _na0 q4s0cder _na255x0c;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>_np<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 255 (255)<br/>n2; 1 - 65535 (1)</td>
+            <td class='desc'><b>(release <u>P</u>itch <u>EN</u>velop)音程リリースエンベロープ．</b>キーオフ後にテーブルエンベロープを適用する．'@rr/s'の第二引数と独立して設定可能．
+<pre class='example'>
+#TABLE0{(0,64,0)20}; _np0 q4cde;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>_nt<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 255 (255)<br/>n2; 1 - 65535 (1)</td>
+            <td class='desc'><b>(release no<u>T</u>e <u>EN</u>velop)ノートリリースエンベロープ．</b>キーオフ後にテーブルエンベロープを適用する．'@rr/s'の第二引数と独立して設定可能．
+<pre class='example'>
+#TABLE0{|0,3,7}; _nt0 q4cde;
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>_nf<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 255 (255)<br/>n2; 1 - 65535 (1)</td>
+            <td class='desc'><b>(release <u>F</u>ilter <u>EN</u>velop)フィルターリリースエンベロープ．</b>キーオフ後にテーブルエンベロープを適用する．
+<pre class='example'>
+#TABLE0{(0,128)20}; _nf0 q2cde;
+</pre>
+            </td>
+          </tr>
+          <tr class='notrec'>
+            <td class='state'>!na<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 255 (255)<br/>n2; 1 - 65535 (1)</td>
+            <td class='desc'>【非推奨;TSSCPとの互換性のためのコマンド】．(Amplitude ENvelope)相対音量エンベロープ．ただし，TSSCPのnaコマンドとは挙動が異なり，リリースに対して適用されず，q/sコマンドを上書きしない．(q0s0を指定してnaコマンドを適用しているデータなどは，q8s63に書き換える事で対応可能．)</td>
+          </tr>
+        </tbody></table>
+        <div class='appendex'>
+          <div class='title'>テーブルエンベロープコマンドの引数</div>
+          <div>
+            #TABLEで定義したテーブルをエンベロープとして適用する．第一引数＝未指定/255の場合，エンベロープ設定が解除される．第二引数でテーブル１エントリ辺りの再生速度をフレーム数で指定する．
+<pre class='example'>
+#TABLE0{|0,4,7}; nt0,1c nt0,2c nt0,5c; // 第二引数でエンベロープ速度を指定する
+</pre>
+          </div>
+        </div>
+<!--
+        <div class='appendex'>
+          <div class='title'>埋め込みテーブル</div>
+          <div>
+            テーブルエンベロープコマンドの第一引数の位置に直接テーブルを記述する事が出来る．このテーブルは他から参照する事は出来ない．#TABLEで定義したテーブルと別に最大256個まで埋め込める．
+<pre class='example'>
+nt{|0,4,7} cde; // 分散コード用のテーブルをmmlシーケンス内に直接記述．
+</pre>
+          </div>
+        </div>
+-->
+      </div>
+      
+      <h3>パイプ接続</h3>
+      <div class='table'>
+        <table><tbody>
+          <tr>
+            <th class='state'>Statement</th>
+            <th class='range'>Range</th>
+            <th class='desc'>Description</th>
+          </tr>
+          <tr>
+            <td class='state'>@o<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 2 (0)<br/>n2; 0 - 3 (0)</td>
+            <td class='desc'><b>(<u>O</u>utput pipe)パイプ出力の設定．</b>TSSCPのそれと同等．後続のシーケンスで@i,@rを指定する事でチャンネル間の FM/RingMod 接続が可能．<br/>
+              第１引数でモード(0;通常のステレオ出力(パイプへの出力はオフ)，1;パイプ上書，2;パイプ加算)を指定．<br/>
+              第２引数でパイプ(0-3)を指定．モード1か2でパイプへ出力した場合，モノラルで出力され，@v, @pは無視される．<br/>
+<pre class='example'>
+@o1 %5q8s0 cde; @i5 %5 cde; 
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>@i<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 7 (5)<br/>n2; 0 - 3 (0)</td>
+            <td class='desc'><b>(freqency modulating <u>I</u>nput pipe)FM接続パイプ入力の設定．</b>TSSCPのそれと同等．前出のシーケンスで@oを指定する事でチャンネル間のFM接続が可能<br/>
+              第１引数でモジュレーション(5が通常のFM音源相当，0でオフ)，第２引数でパイプを指定．
+<pre class='example'>
+@o1 %5q8s0 cde; @i3 %5 cde; 
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td class='state'>@r<i>n1</i>,<i>n2</i></td>
+            <td class='range'>n1; 0 - 8 (4)<br/>n2; 0 - 3 (0)</td>
+            <td class='desc'><b>(<u>R</u>ing modulating input pipe)リングモジュレーションパイプ入力の設定．</b>前出のシーケンスで@oを指定する事でチャンネル間のリングモジュレーション接続が可能．<br/>
+              第１引数でモジュレーション(4が通常のリングモジュレーション相当，0でオフ)，第２引数でパイプを指定．
+<pre class='example'>
+@o1 %5q8s0 cde; @r5 %5gab; 
+</pre>
+            </td>
+          </tr>
+        </tbody></table>
+      </div>
+    </div>
+  </body>
+</html>
+
+

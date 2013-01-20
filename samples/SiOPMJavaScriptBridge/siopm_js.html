@@ -1,0 +1,186 @@
+<html>
+  <head>
+    <meta http-equiv='content-type' content='text/html;charset=utf-8'>
+    <title>SiOPM on javascript</title>
+    <script type='text/javascript' src='../script/jquery.js'></script>
+    <script type='text/javascript' src='../script/siopm.js'></script>
+    <script type="text/javascript"><!--
+      function translate() {
+        $("textarea").val(SIOPM.trans($("textarea").val()));
+      }
+      function togglePlay() {
+        if (SIOPM.playing) {
+          SIOPM.stop();
+          $("span#msg").html("");
+        } else {
+          SIOPM.compile($("textarea").val());
+        }
+      }
+      
+      $(document).ready(function(){
+        $("span#msg").html("SiOPM module loading ...");
+        
+        SIOPM.onLoad = function() { 
+          $("input:button").attr("disabled", false);
+          $("span#msg").html("");
+        }
+        SIOPM.onCompileProgress = function() { 
+          $("span#msg").html("compiling : " + Math.floor(SIOPM.compileProgress*100) + "[%]");
+        }
+        SIOPM.onCompileComplete = function() {
+          $("span#msg").html("play : " + SIOPM.title);
+          SIOPM.play();
+        }
+        SIOPM.onStreamStart = function() {
+        }
+        SIOPM.onError = function(errorMessage) {
+          Alert(errorMessage);
+          $("span#msg").html(errorMessage);
+        }
+        SIOPM.initialize();
+      });
+    //--></script>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-4060125-4");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+    
+  </head>
+  <body style="font-size:12px; font-family:monospace;">
+    <input type="button" id="toggle" onClick="togglePlay();" disabled="true" value="play/stop"/>
+    <input type="button"             onClick="translate();"  disabled="true" value="tss"/>
+    <span id="msg">Please Enable the JavaScript.</span><br/>
+    <a href="http://mmltalks.appspot.com/document/siopm_mml_ref_05.html" target="_blank">MML reference</a><br/>
+    <textarea id="ta" style="height:80%; width:100%; font-size:12px; font-family:MS Gothic, monospace;">
+#TITLE{Penetration SCC version (From TSSCP thread STG3 930-932 by ID:A7Ri5mEU)};
+#WAVB0{36454d4b41362f303639332309efd9cc362f220df2d9c8c3c6cbccc6bab0aeb7};
+#WAVB1{001e3c5976624d372007edd2b6c9dcee00112336492d12f8dfc8b29d89a6c3e1};
+#WAVB2{6c69666360554a3f34291e1308050200fcf9f6f3f0e5dacfc4b9aea39895928f};
+#WAVB3{5c5c5d5d5d5c5c5b59524a413930271d140a00f6ebe1d6ccc1bdb8b3afaba6a2};
+#WAVB4{605c5854503c28140004a7abafc4d7eb00fbf8f4efdbc8b49fa3080b1024374b};
+#WAVB5{1f392e062c37504b5f3023306c3e00dd1e20fdbfd1cddacddfb2adc611f7cfc4};
+#WAVB6{28323b444d555c63686d7275787a7b7b7b736b62584f443a2f24190e03f9efe4};
+#WAVB7{81ca0b3d5a60502e00cd9c81818181818199aab0a68c81818181818181818181};
+
+t147;
+
+/*{sn}*/
+#S=q0s25,-3o4g;
+#T=S;
+
+#A=r1^1^1^1^1^1^1 r2 S8S8SS8.;#B=[7r2.S4]r2.S8.S [5r2.S4]r2^8S8S8S8[3r2.S4];
+#C=r2rSSSS(S8)S;#D=r4S4;#E=r4T4;#W=ABC;#X=[7D]r4S8.S[7D]rSS8S8.S[7D]r4S8SS[4D]r4S8S8rSS8S8.))S((S8))S((SSS8SrS8S8S;
+#Y=[7E]r4S8))S((S[7E]r8S8S8SS[7E]rSrSr8SS[3E]r4SS8S[2E]r8[7S8];#Z=l16x21W $ Xg2r8Y;
+#FMd2(c8(b8(a)));@ml13%3l8Z;@ml11%3l8Z;@ml7%3l8Z;%3l8Z;
+#S=q0s22,3o4g;#T=q0s21,3o3f;#Z=l16x25W $ X o3q0s16e2 r8 Y;
+%2l8Z;
+
+/*{bd}*/
+#A=l4aaaal16;
+#Z=x29l16q0s32,-192o4r1^1^1^1[3A]a2araraar8[18A]$[15A]a4a4a4r8a2a4.a4a4a4[15A];
+#FMa+b+c+d;%3l8Z;%3l8Z;%3l8Z;%3l8Z;
+
+/*{hh}*/
+#C=s28q1o8b;#O=s16q1o8b;#A=[8r1][17[4CCO8]]r1;#B=[2(Cr)CC](Cr)Cr(Or)CC;
+#D=[2(Cr)CC][4CrOr]CCO2C24C24C24)O4.(O8[63C8O8];#Z=x12l16p8A$[14B]D;
+#FMd6(c7(b8(a)));@ml9%3l8Z;@ml14%3l8Z;@ml12%3l8Z;@ml9%3l8Z;
+
+/*{base}*/
+#A=x25q8s28r1^1^1^1  o2b1^1^1 r2;
+#B=q6ererde>ab< s30[[4e8.er>b<d>b<drerf+rd>b<]c8.cr>gag<crdrerc>a<d8.dr>a<c>a<drerf+rd>b<
+[2e8.er>b<d>b<drerf+rd>b<]]e8.er>b<d>b<drerf+rd>b<r2.rb q0s12,-36b>q6s30b<;
+#C=e8.erereere8re8e;#D=f+8.f+rf+rf+frf8rf8f;#E=c+8.c+rc+rc+crc8rc8f;#F=s30q6b8^8.brfaf;#G=b8.brfaf;
+#H=arbr<q1s12,-3c>q6s30a8.;
+#J=GH[2G(-1)H(-1)]G(-2)H(-5)G(-2)H(-2)G(-3)H(-3)G(-3)g+ra+r<cr> F(2)H(2)G(2)H(2) G(1)H(1)G(1);
+#K=fr<c+r>aa+<q1s12,6e8s30q6f+8.f+rc+ec+erf+rq1s12,-3g+q6s30e8.q1s12,3e8
+s30q6f+f+rc+ec+erf+rg+rg8.^8grc+fc+frgrarf+4<cd>g+a+>b4<b8>b8q1s26,-3b8q6s30;
+#Y=Ao3%4x46;#Z=B $ o3 CC(2)C(3)DCC(-2)EC(1)CC(2)C(3)DCC(-2) c8.crcd8rdd8s12q1e1^8q3s24,-3e2>FHJK;
+%4@0l16k0Y@6Z;%4@0l16k4Y@7Z;
+
+/*{mero}*/
+#A=r1^1^1^1  o3d1^1^1;
+#B=e4g4< d1.r8 e8d8c+8^1.r8 >a8e8g8^2r8 a8b8a8^2r8 f+8d8e8^1.;
+#C=e8g8<r8d8^1.r8e8d8c+8^1.r8 >a8e8g8^2r8 a8b8a2.r8 <d4e1^1^1r1;
+#D=l8[rq4eef+gq5a+32b8..g+64a8...e8r2r|r4q4eef+gq5<c+32d8..>a+64b16..^2.r4];
+#E=D q4e16f+16gf+edr>br<q5e^2.r4 D q4e16f+16gf+edf+ab1^8r2;
+#F=D q4e16f+16gf+edr>br<q5e^2.r4 s22@0 x21@lfo16mp0,18,32
+[rq4ggabq5<c+32d8..c64c+8...>a8r2r|r4q4ggabq5<f32f+8..c64c+16..^2.r4>]q4g16a16bagf+a<de1^8r2;
+#G=@2 mp0o6 q0s12,9d+8 q7s28@lfo12mp0,24,16 e1.^8d8>g+8<q0s12,9d+8 q7s28@lfo12mp0,24,16 e8 d1^2..;
+#H=q0s12,-9d8 s12,9c+8 q7s28@lfo12mp0,24,16 d1^4. c8>f+8<q0s12,9c+8 q7s28@lfo12mp0,24,16 d8 d+16r16 d8;
+#I=c8^1cde;#J=c1x21k0>ab<c+;
+#K=q0s12,9f8 q7s28@lfo12mp0,24,16 f+1.^8e8>a+8<q0s12,9f8 q7s28@lfo12mp0,24,16 f+8 e8 a8 f+1^8 f+8 g r;
+#L=q0s12,9g s28q7@lfo12mp0,24,16 g+2^8f+  b g+2.f+ed+4c+d+<c+4>d+c+d+2 q0s12,18a+16 q7s28@lfo12mp0,24,16 b16^4.;
+#M=[7r1]r2r8 o5 ab<c+ r [3r1]r2c+dr q0s12,9d s28q7@lfo12mp0,24,16 d+2^8c+ f+ 
+d+2.c+>b<c4>a+<c a+4 c>a+<c2 q0s12,18f+16 q7s28@lfo12mp0,24,16 g16^4.;
+%4 @0 l16k0x34q8s28A s26r2 k0x17@lfo12mp0,18,32 o6 @1 BC $ k0@2 x29s32o6 q5@lfo12mp0,12,12  E k-8G H I K L r;
+%4 @0 [4l8r1][22r1]$ [16r1]r4. x12r k8G H I K L ;
+%4 @0 l16k4x34q8s28A s26r2 k8x17@lfo12mp0,18,32 o5 @1 BC $ k-4@2 x8s12o6 q5@lfo12mp0,12,12  F  x21@2 q7s28@lfo12mp0,24,16 k-8M r;
+%4 @0 [4l8r1][22r1]$ [16r1]r4. x8@2 q7s28@lfo12mp0,24,16 k8r M;
+
+/*{mero&back}*/
+#A=r1^1^1^1^1 o3g+1^1;
+#D=@lfo8mp12 e4 g4 b4 <e4 e1 >e4 g4 b4 <e4 e2 f2 >e4 g4 b4 <e4 e1;
+#E=@lfo8mp12 d4 e4 g4 b4 a1   d4 e4 g4  b4 a2 a2  d4 e4 g4  b4 a1;
+#F=r1^8 @lfo16mp6 x12@5o5q1s12r8f4b4<f4<  e1  d1 e1 f+2 a2 g1 e1 r2. e1;
+#G=r1^8 @lfo16mp6 x12@5o5q1s12e4a4<e4a8  b1<c+1 d1 c+2 d2 e1 d1 r2.>b1;
+%4 @0 l16k0x34q8s28A s26r2 x25o5 B k8C $ x4o4D F r2^8 @0
+x8o4 k0q8s63@lfo8mp12 b8^1^1 a+1^1 a1^1 g+1^1  <c+1^1 c1^1   c+1^1 d+1 r2 d+2;
+%4 @0 l16k4x34q8s28A s26r2 x25o4 B k8C $ x4o4E G r2^8 @0
+x8o4 k0q8s63@lfo8mp12 f+8^1^1 f1^1  e1^1 d+1^1  g1^1  f+1^1  f+1^1 a+1 r2 b2;
+
+#A=o6@0q8s12x4@lfo8mp6;
+#H=A  e1f+1f+1f+2a2 g1 f+1 q5x8l8edc>b<df+g1;
+#I=A >b1<c+1d1c+2c2>b1<e1  q5x8l8>gf+edf+ab1;
+
+/*{analog? & back}*/
+#A=r8br2.b;
+%1 k0@4  x25q0l16 o5  s25,-288r1r1r2...b [4A]r1[18A]%4 $ k-8@0 q8s26x4o4Dr1^1k8H r2^8 @0
+x4o5 q8s63@lfo8mp12 b8^1^1 a+1^1 a1^1 g+1^1  <c+1^1 c1^1   c+1^1 d+1 r2 d+2;
+%3 k0x8q0l16 o4  s16,-48r1r1r2...b [4A]r1[18A]%4 $ k-8@0 q8s26x4o4Er1^1k8I r2^8 @0
+x4o5 q8s63@lfo8mp12 f+8^1^1 f1^1  e1^1 d+1^1  g1^1  f+1^1  f+1^1 a+1 r2 b2;
+
+/*{synth?}*/
+#A=o5l16c+def+g+a+<cdef+g+a+<cdef+;
+#B=o6l12f+g+a+<cdef+edc>a+g+;
+%4 @1 l16k0q8s63[4r1]x4[22A]$ [16r1]r2 [16B];
+
+/*{noise}*/
+#A=p0crp0cp0cr ))p0c ((p8frp8fp8fr ))p8f ((p0crp8fr;
+%2 k0x17l16 q0s22,-72o5[7A]p0crp0cp0cr ))p0cp8frp8fp8f ))p8fr4x17[18A]p4$ [16r1]r2 [16r1];
+
+/*{back}*/
+#A=r1^1^1^1^1^1 o4c+1 r1 k0o5 x12q4s12a1^1 g+1^1 g1 a1
+q8s26a1f+2.r8   b8^1.r8 <c+8>b8a8^1.r8 e8  c+8 e8^2r8 f+8g8f+8^2. a4b1 x34f+1^1r1;
+#B=r1^1^1^1^1^1 o4c+1 r1 k0o5 x12q4s12e1^1 d+1^1 e1 e1
+q8s26e1>b2.r8 <f+8^1.r8  a8  g8e8^1.r8 c+8>b8 <c8^2r8 d8 e8d8^2. f+4a1^1 x34c+1r1;
+#C=l16 q4s12x8;
+#D=o6e1f+1f+1f+2a2g1 f+1 e4.s63q6e8r8e8r8 q2s12e8^1;
+#E=o5b1<c+1d1c+2c2>b1<e1 >b4.s63q6a8r8a8r8<q2s12c8^1;
+%4 @0 l16k0x34q8s28A $ @4 x34k-8CD o6 q2s12@lfo16mp0,18,32 x4H r2. [16r1];
+%4 @0 l16k4x34q8s28B $ @4 x34k-8CE o6 q2s12@lfo16mp0,18,32 x4I r2. [16r1];
+
+/*{seq1}*/
+#A=o7b>b<<f+>d+br>>f+<e<b>f+r8<<bf+>f+>b;#B=o8ede>ab<b>ae>>e<<e<erf+>ab<d;#C=o8c>b<c>f+g<g>f+c>>c<<c<crd>f+gb<;
+#D=o8dcd>ga<a>gd>>d<<d<dre>ga<c;#E=o8ede>ab<b>ae>e<e<erf+>g+b<d;#F=s26[4o4e<e<de>>];#G=bbrbrbr2;#H=r8bbrbrbr2;#J=@2;
+%5 @1 l16k-8x8q2s34o7 r1[6A]o7b>b<<f+>d+br> )f+<e<b>f+ )r8<r4 x8[2BBBBCD|BE]BBBB $ x8%5 @1 k0[16F]x21%4 J o4 q1r2 [16r1]q2;
+
+/*{seq2}*/
+#A=o3b<b<b>b<b<b>b<b<b>b>b>b<b<b<b>b>;
+%5 @1 l16k8x8q2s34o4 r1r1 [5A]o3b<b<b>b<b<b>)b<b<b>b> )b>b<r4 
+x8[2kt-7AAAA kt-11A kt-9A |kt-7AA]kt-7AAAA kt0$ x8%5 @1 k0[16F]x21r2 %4 J o4 q1[16r1]q2;
+
+/*{seq3}*/
+%4l16k8x8q2s34o4[4r1][22r1]$[16r1]r2q1x21s26Jo4[16r1]q2;
+
+#END;
+    </textarea><br/>
+    Created by <a href="http://d.hatena.ne.jp/keim_at_Si/">keim_at_Si</a>.<br/>
+    NOTE : This page is only for testing. It will no longer be available anytime soon.
+  </body>
+</html>
+
