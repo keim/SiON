@@ -28,7 +28,7 @@ package org.si.sion.module.channels {
     // valiables
     //--------------------------------------------------
         private var _ks_delayBuffer:Vector.<int>;   // delay buffer
-        private var _ks_delayBufferIndex:int;       // delay buffer index
+        private var _ks_delayBufferIndex:Number;    // delay buffer index
         private var _ks_pitchIndex:int;             // pitch index
         private var _ks_decay_lpf:Number;           // lpf decay
         private var _ks_decay:Number;               // decay
@@ -320,11 +320,11 @@ package org.si.sion.module.channels {
         // Karplus-Strong algorism
         private function _applyKarplusStrong(pointer:SLLint, len:int) : void
         {
-            var i:int, t:int, indexMax:int, tmax:int = SiOPMTable.PITCH_TABLE_SIZE-1;
+            var i:int, t:int, indexMax:Number, tmax:int = SiOPMTable.PITCH_TABLE_SIZE-1;
             t = _ks_pitchIndex + operator[0]._pitchIndexShift + _pm_out;
             if (t<0) t=0;
             else if (t>tmax) t=tmax;
-            indexMax = _table.pitchSamplingCount[t];
+            indexMax = _table.pitchWaveLength[t];
             
             for (i=0; i<len; i++) {
                 // lfo_update();
@@ -337,15 +337,15 @@ package org.si.sion.module.channels {
                     t = _ks_pitchIndex + operator[0]._pitchIndexShift + _pm_out;
                     if (t<0) t=0;
                     else if (t>tmax) t=tmax;
-                    indexMax = _table.pitchSamplingCount[t];
+                    indexMax = _table.pitchWaveLength[t];
                     _lfo_timer += _lfo_timer_initial;
                 }
                 
                 // ks_update();
-                if (++_ks_delayBufferIndex >= indexMax) _ks_delayBufferIndex = 0;
+                if (++_ks_delayBufferIndex >= indexMax) _ks_delayBufferIndex %= indexMax;
                 _output *= _decay;
-                _output += (_ks_delayBuffer[_ks_delayBufferIndex] - _output) * _decay_lpf + pointer.i;
-                _ks_delayBuffer[_ks_delayBufferIndex] = _output;
+                _output += (_ks_delayBuffer[int(_ks_delayBufferIndex)] - _output) * _decay_lpf + pointer.i;
+                _ks_delayBuffer[int(_ks_delayBufferIndex)] = _output;
                 pointer.i = int(_output);
                 pointer = pointer.next;
             }

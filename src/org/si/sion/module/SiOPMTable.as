@@ -223,8 +223,8 @@ package org.si.sion.module {
         public var logTable:Vector.<int> = null;
         /** PG:MIDI note number to FM key code. */
         public var nnToKC:Vector.<int> = null;
-        /** PG:pitch sampling count table. */
-        public var pitchSamplingCount:Vector.<int> = null;
+        /** PG:pitch wave length (in samples) table. */
+        public var pitchWaveLength:Vector.<Number> = null;
         /** PG:Wave tables without any waves. */
         public var noWaveTable:SiOPMWaveTable;
         public var noWaveTableOPM:SiOPMWaveTable;
@@ -467,13 +467,13 @@ package org.si.sion.module {
             jmax = PITCH_TABLE_SIZE;
             dp   = 1/imax;
             
-            // sampling count table
-            pitchSamplingCount = new Vector.<int>(PITCH_TABLE_SIZE, true);
+            // wave length table
+            pitchWaveLength = new Vector.<Number>(PITCH_TABLE_SIZE, true);
             n = rate / 8.175798915643707;  // = 5393.968278209282@44.1kHz sampling count @ MIDI note number = 0 
             for (i=0, p=0; i<imax; i++, p+=dp) { 
                 v = Math.pow(2, -p) * n;
                 for (j=i; j<jmax; j+=imax) {
-                    pitchSamplingCount[j]  = int(v+0.5);
+                    pitchWaveLength[j] = v;
                     v *= 0.5;
                 }
             }
