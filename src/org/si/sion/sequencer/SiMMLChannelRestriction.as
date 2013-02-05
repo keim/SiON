@@ -36,10 +36,10 @@ package org.si.sion.sequencer {
     // constructor
     //--------------------------------------------------
         /** @private  */
-        function SiMMLChannelRestriction(type:int)
+        function SiMMLChannelRestriction(type:int, moduleType:int)
         {
             this.type = type;
-            this._moduleType = 0;
+            this._moduleType = moduleType;
         }
         
         

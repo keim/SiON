@@ -497,13 +497,14 @@ package org.si.sion.sequencer {
         
         
         /** restrict channel module type 
-         *  @param restrictionModule module restriction type, defined in SiMMLChannelRestriction
+         *  @param restrictionModule module restriction type, defined in SiMMLTable
          *  @param channelNum channel number
          *  @see SiMMLChannelRestriction
          */
-        public function restrictModule(restrictionModule:int, channelNum:int) {
-            //setChannelModuleType();
-            _channelModuleRestriction = type;
+        public function restrictModule(restrictionType:int, channelNum:int) {
+            _channelModuleRestriction = _table.channelModuleRestriction[SiMMLTable.NO_RESTRICTION];
+            setChannelModuleType(_channelModuleRestriction._moduleType, channelNum);
+            _channelModuleRestriction = _table.channelModuleRestriction[type];
         }
 
         
@@ -552,18 +553,18 @@ package org.si.sion.sequencer {
         public function setChannelModuleType(type:int, channelNum:int, toneNum:int=-1) : void
         {
             // check restriction
-            if (_channelModuleRestriction.type != NO_RESTRICTION) return;
+            if (_channelModuleRestriction.type == NO_RESTRICTION) {
+                // change module type
+                _channelModuleSetting = _table.channelModuleSetting[type];
+                
+                // reset operator pgType
+                _voiceIndex = _channelModuleSetting.initializeTone(this, channelNum, channel.bufferIndex);
             
-            // change module type
-            _channelModuleSetting = _table.channelModuleSetting[type];
-            
-            // reset operator pgType
-            _voiceIndex = _channelModuleSetting.initializeTone(this, channelNum, channel.bufferIndex);
-            
-            // select tone
-            if (toneNum != -1) {
-                _voiceIndex = toneNum;
-                _channelModuleSetting.selectTone(this, toneNum);
+                // select tone
+                if (toneNum != -1) {
+                    _voiceIndex = toneNum;
+                    _channelModuleSetting.selectTone(this, toneNum);
+                }
             }
         }
         
@@ -798,7 +799,7 @@ package org.si.sion.sequencer {
             
             // channel module setting
             _channelModuleSetting = _table.channelModuleSetting[SiMMLTable.MT_PSG];
-            _channelModuleRestriction = NO_RESTRICTION;
+            _channelModuleRestriction = _table.channelModuleRestriction[SiMMLTable.NO_RESTRICTION];
             _channelNumber = 0;
             
             // initialize channel by _channelModuleSetting

@@ -223,26 +223,26 @@ package org.si.sion.sequencer {
             
             // restriction setting
             channelModuleRestriction = new Array(RESTRICTION_MAX);
-            channelModuleRestriction[NO_RESTRICTION] = new SiMMLChannelRestriction(NO_RESTRICTION);
-            channelModuleRestriction[RESTRICT_PSG]   = new SiMMLChannelRestriction(RESTRICT_PSG);
-            channelModuleRestriction[RESTRICT_SSG]   = new SiMMLChannelRestriction(RESTRICT_SSG);
-            channelModuleRestriction[RESTRICT_DCSG]  = new SiMMLChannelRestriction(RESTRICT_DCSG);
-            channelModuleRestriction[RESTRICT_APU]   = new SiMMLChannelRestriction(RESTRICT_APU);
-            channelModuleRestriction[RESTRICT_FDS]   = new SiMMLChannelRestriction(RESTRICT_FDS);
-            channelModuleRestriction[RESTRICT_N106]  = new SiMMLChannelRestriction(RESTRICT_N106);
-            channelModuleRestriction[RESTRICT_MMC5]  = new SiMMLChannelRestriction(RESTRICT_MMC5);
-            channelModuleRestriction[RESTRICT_FME7]  = new SiMMLChannelRestriction(RESTRICT_FME7);
-            channelModuleRestriction[RESTRICT_VRC6]  = new SiMMLChannelRestriction(RESTRICT_VRC6);
-            channelModuleRestriction[RESTRICT_VRC7]  = new SiMMLChannelRestriction(RESTRICT_VRC7);
-            channelModuleRestriction[RESTRICT_GB]    = new SiMMLChannelRestriction(RESTRICT_GB);
-            channelModuleRestriction[RESTRICT_SCC]   = new SiMMLChannelRestriction(RESTRICT_SCC);
-            channelModuleRestriction[RESTRICT_WSG]   = new SiMMLChannelRestriction(RESTRICT_WSG);
-            channelModuleRestriction[RESTRICT_WS ]   = new SiMMLChannelRestriction(RESTRICT_WS);
-            channelModuleRestriction[RESTRICT_PCE]   = new SiMMLChannelRestriction(RESTRICT_PCE);
-            channelModuleRestriction[RESTRICT_OPL]   = new SiMMLChannelRestriction(RESTRICT_OPL);
-            channelModuleRestriction[RESTRICT_OPN]   = new SiMMLChannelRestriction(RESTRICT_OPN);
-            channelModuleRestriction[RESTRICT_OPNA]  = new SiMMLChannelRestriction(RESTRICT_OPNA);
-            channelModuleRestriction[RESTRICT_OPM]   = new SiMMLChannelRestriction(RESTRICT_OPM);
+            channelModuleRestriction[NO_RESTRICTION] = new SiMMLChannelRestriction(NO_RESTRICTION, MT_ALL);
+            channelModuleRestriction[RESTRICT_PSG]   = new SiMMLChannelRestriction(RESTRICT_PSG,   MT_PSG);
+            channelModuleRestriction[RESTRICT_SSG]   = new SiMMLChannelRestriction(RESTRICT_SSG,   MT_PSG);
+            channelModuleRestriction[RESTRICT_DCSG]  = new SiMMLChannelRestriction(RESTRICT_DCSG,  MT_PSG);
+            channelModuleRestriction[RESTRICT_APU]   = new SiMMLChannelRestriction(RESTRICT_APU,   MT_APU);
+            channelModuleRestriction[RESTRICT_FDS]   = new SiMMLChannelRestriction(RESTRICT_FDS,   MT_FM);
+            channelModuleRestriction[RESTRICT_N106]  = new SiMMLChannelRestriction(RESTRICT_N106,  MT_CUSTOM);
+            channelModuleRestriction[RESTRICT_MMC5]  = new SiMMLChannelRestriction(RESTRICT_MMC5,  MT_APU);
+            channelModuleRestriction[RESTRICT_FME7]  = new SiMMLChannelRestriction(RESTRICT_FME7,  MT_PSG);
+            channelModuleRestriction[RESTRICT_VRC6]  = new SiMMLChannelRestriction(RESTRICT_VRC6,  MT_PULSE);
+            channelModuleRestriction[RESTRICT_VRC7]  = new SiMMLChannelRestriction(RESTRICT_VRC7,  MT_FM);
+            channelModuleRestriction[RESTRICT_GB]    = new SiMMLChannelRestriction(RESTRICT_GB,    MT_APU);
+            channelModuleRestriction[RESTRICT_SCC]   = new SiMMLChannelRestriction(RESTRICT_SCC,   MT_CUSTOM);
+            channelModuleRestriction[RESTRICT_WSG]   = new SiMMLChannelRestriction(RESTRICT_WSG,   MT_CUSTOM);
+            channelModuleRestriction[RESTRICT_WS ]   = new SiMMLChannelRestriction(RESTRICT_WS,    MT_CUSTOM);
+            channelModuleRestriction[RESTRICT_PCE]   = new SiMMLChannelRestriction(RESTRICT_PCE,   MT_CUSTOM);
+            channelModuleRestriction[RESTRICT_OPL]   = new SiMMLChannelRestriction(RESTRICT_OPL,   MT_FM);
+            channelModuleRestriction[RESTRICT_OPN]   = new SiMMLChannelRestriction(RESTRICT_OPN,   MT_FM);
+            channelModuleRestriction[RESTRICT_OPNA]  = new SiMMLChannelRestriction(RESTRICT_OPNA,  MT_FM);
+            channelModuleRestriction[RESTRICT_OPM]   = new SiMMLChannelRestriction(RESTRICT_OPM,   MT_FM);
 
             
             // tables
