@@ -344,7 +344,8 @@ package org.si.sion.module.channels {
                 // ks_update();
                 if (++_ks_delayBufferIndex >= indexMax) _ks_delayBufferIndex %= indexMax;
                 _output *= _decay;
-                _output += (_ks_delayBuffer[int(_ks_delayBufferIndex)] - _output) * _decay_lpf + pointer.i;
+                t = int(_ks_delayBufferIndex);
+                _output += (_ks_delayBuffer[t] - _output) * _decay_lpf + pointer.i;
                 _ks_delayBuffer[int(_ks_delayBufferIndex)] = _output;
                 pointer.i = int(_output);
                 pointer = pointer.next;
