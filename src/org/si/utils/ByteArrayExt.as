@@ -12,7 +12,9 @@ package org.si.utils {
     import flash.net.FileReference;
     import flash.net.URLRequest;
     import flash.net.URLLoader;
+    import flash.utils.Endian;
     import flash.utils.ByteArray;
+    import flash.utils.CompressionAlgorithm;
     import flash.events.Event;
     import flash.display.BitmapData;
 
@@ -22,6 +24,9 @@ package org.si.utils {
     // variables
     //--------------------------------------------------
         static private var crc32:Vector.<uint> = null;
+        
+        /** name of this ByteArray */
+        public var name:String = null;
         
         
         
@@ -317,6 +322,45 @@ package org.si.utils {
             function _onSaveComplete(e:Event) : void { _removeAllEventListeners(e, onComplete); }
             function _onSaveCancel(e:Event)   : void { _removeAllEventListeners(e, onCancel); }
             function _onSaveError(e:Event)    : void { _removeAllEventListeners(e, onError); }
+        }
+        
+        
+        
+        
+    // zip file operations
+    //--------------------------------------------------
+        /** Expand zip file including plural files.
+         *  @return List of ByteArrayExt
+         */
+        public function expandZipFile() : Vector.<ByteArrayExt>
+        {
+            var bytes:ByteArray = new ByteArray(), fileName:String = new String(), 
+                bae:ByteArrayExt, result:Vector.<ByteArrayExt> = new Vector.<ByteArrayExt>(), 
+                flNameLength:uint, xfldLength:uint, compSize:uint, compMethod:int, signature:uint;
+            
+            bytes.endian = Endian.LITTLE_ENDIAN;
+            this.endian = Endian.LITTLE_ENDIAN;
+            this.position = 0;
+            while (this.position < this.length) {
+                this.readBytes(bytes, 0, 30);
+                bytes.position = 0;  signature = bytes.readUnsignedInt();
+                if (signature != 0x04034b50) break; // chech signature
+                bytes.position = 8;  compMethod   = bytes.readByte();
+                bytes.position = 26; flNameLength = bytes.readShort();
+                bytes.position = 28; xfldLength   = bytes.readShort(); 
+                
+                this.readBytes(bytes, 30, flNameLength + xfldLength);
+                bytes.position = 30; fileName = bytes.readUTFBytes(flNameLength);
+                bytes.position = 18; compSize = bytes.readUnsignedInt();
+                
+                bae = new ByteArrayExt();
+                this.readBytes(bae, 0, compSize);
+                if (compMethod == 8) bae.uncompress(CompressionAlgorithm.DEFLATE);
+                bae.name = fileName;
+                result.push(bae);
+            }
+            
+            return result;
         }
         
         

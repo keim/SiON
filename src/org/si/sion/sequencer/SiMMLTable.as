@@ -34,6 +34,54 @@ package org.si.sion.sequencer {
         
         static private const MT_ARRAY_SIZE:int = 11;
         
+        
+        // module restriction type
+        /** no restrictions (standard SiON module) */
+        static public const NO_RESTRICTION:int = 0;
+        /** module restriction as PSG (AY-3-8910) : PSG3 */
+        static public const RESTRICT_PSG  :int = 1;
+        /** module restriction as SSG (YM2203) : PSG3 */
+        static public const RESTRICT_SSG  :int = 2;
+        /** module restriction as DCSG (SN76489) : PSG3,NZG1 */
+        static public const RESTRICT_DCSG :int = 3;
+        
+        /** module restriction as RP2A03 pAPU (NES) : APU2,TRI1,NZG1 */
+        static public const RESTRICT_APU  :int = 4;
+        /** module restriction as RP2C33 (Disc System) : FDS1 */
+        static public const RESTRICT_FDS  :int = 5;
+        /** module restriction as N106 (NAMCO 106) : WM8 */
+        static public const RESTRICT_N106 :int = 6;
+        /** module restriction as MMC5 : APU2 */
+        static public const RESTRICT_MMC5 :int = 7;
+        /** module restriction as FME7 (Sunsoft 5B) : PSG3 */
+        static public const RESTRICT_FME7 :int = 8;
+        /** module restriction as VRC6 (KONAMI) : VRC2,SAW1 */
+        static public const RESTRICT_VRC6 :int = 9;
+        /** module restriction as VRC7 (KONAMI) : FM2x6 */
+        static public const RESTRICT_VRC7 :int = 10;
+        
+        /** module restriction as Game boy : APU2,WM1,NZG1 */
+        static public const RESTRICT_GB :int = 11;
+        /** module restriction as KONAMI SCC : WM5 */
+        static public const RESTRICT_SCC:int = 12;
+        /** module restriction as NAMCO WSG : WM3 */
+        static public const RESTRICT_WSG:int = 13;
+        /** module restriction as Wonder Swan : WM4 */
+        static public const RESTRICT_WS :int = 14;
+        /** module restriction as PC Engine : WM6 */
+        static public const RESTRICT_PCE:int = 15;
+        
+        /** module restriction as OPL (YM3526/similar with YM2413;OPLL) : FM2x9 */
+        static public const RESTRICT_OPL :int = 16;
+        /** module restriction as OPN (YM2203) : FM4x3,PSGx3 */
+        static public const RESTRICT_OPN  :int = 17;
+        /** module restriction as OPNA (YM2608) : FM4x6,PSGx3 */
+        static public const RESTRICT_OPNA :int = 18;
+        /** module restriction as OPM (YM2151) : FM4x8 */
+        static public const RESTRICT_OPM  :int = 19;
+        
+        static private const RESTRICTION_MAX:int = 20;
+        
         static public const ENV_TABLE_MAX:int = 512;
         static public const VOICE_MAX:int = 256;
         
@@ -43,6 +91,8 @@ package org.si.sion.sequencer {
     //--------------------------------------------------
         /** module setting table */
         public var channelModuleSetting:Array = null;
+        /** module restriction table */
+        public var channelModuleRestriction:Array = null;
         /** module setting table */
         public var effectModuleSetting:Array = null;
        
@@ -170,6 +220,31 @@ package org.si.sion.sequencer {
             channelModuleSetting[MT_KS]._channelType = SiOPMChannelManager.CT_CHANNEL_KS;
             channelModuleSetting[MT_KS]._isSuitableForFMVoice = false;
 
+            
+            // restriction setting
+            channelModuleRestriction = new Array(RESTRICTION_MAX);
+            channelModuleRestriction[NO_RESTRICTION] = new SiMMLChannelRestriction(NO_RESTRICTION);
+            channelModuleRestriction[RESTRICT_PSG]   = new SiMMLChannelRestriction(RESTRICT_PSG);
+            channelModuleRestriction[RESTRICT_SSG]   = new SiMMLChannelRestriction(RESTRICT_SSG);
+            channelModuleRestriction[RESTRICT_DCSG]  = new SiMMLChannelRestriction(RESTRICT_DCSG);
+            channelModuleRestriction[RESTRICT_APU]   = new SiMMLChannelRestriction(RESTRICT_APU);
+            channelModuleRestriction[RESTRICT_FDS]   = new SiMMLChannelRestriction(RESTRICT_FDS);
+            channelModuleRestriction[RESTRICT_N106]  = new SiMMLChannelRestriction(RESTRICT_N106);
+            channelModuleRestriction[RESTRICT_MMC5]  = new SiMMLChannelRestriction(RESTRICT_MMC5);
+            channelModuleRestriction[RESTRICT_FME7]  = new SiMMLChannelRestriction(RESTRICT_FME7);
+            channelModuleRestriction[RESTRICT_VRC6]  = new SiMMLChannelRestriction(RESTRICT_VRC6);
+            channelModuleRestriction[RESTRICT_VRC7]  = new SiMMLChannelRestriction(RESTRICT_VRC7);
+            channelModuleRestriction[RESTRICT_GB]    = new SiMMLChannelRestriction(RESTRICT_GB);
+            channelModuleRestriction[RESTRICT_SCC]   = new SiMMLChannelRestriction(RESTRICT_SCC);
+            channelModuleRestriction[RESTRICT_WSG]   = new SiMMLChannelRestriction(RESTRICT_WSG);
+            channelModuleRestriction[RESTRICT_WS ]   = new SiMMLChannelRestriction(RESTRICT_WS);
+            channelModuleRestriction[RESTRICT_PCE]   = new SiMMLChannelRestriction(RESTRICT_PCE);
+            channelModuleRestriction[RESTRICT_OPL]   = new SiMMLChannelRestriction(RESTRICT_OPL);
+            channelModuleRestriction[RESTRICT_OPN]   = new SiMMLChannelRestriction(RESTRICT_OPN);
+            channelModuleRestriction[RESTRICT_OPNA]  = new SiMMLChannelRestriction(RESTRICT_OPNA);
+            channelModuleRestriction[RESTRICT_OPM]   = new SiMMLChannelRestriction(RESTRICT_OPM);
+
+            
             // tables
             _masterEnvelops = new Vector.<SiMMLEnvelopTable>(ENV_TABLE_MAX);
             for (i=0; i<ENV_TABLE_MAX; i++) _masterEnvelops[i] = null;

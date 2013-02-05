@@ -59,7 +59,7 @@ package org.si.sion.sequencer {
         static public const USER_CONTROLLED:int = 0x60000;
         
         // mask bits for eventMask and @mask command
-        /** no mask */
+        /** no event mask */
         static public const NO_MASK:int = 0;
         /** mask all volume commands (v,x,&#64;v,"(",")") */
         static public const MASK_VOLUME:int = 1;
@@ -75,7 +75,6 @@ package org.si.sion.sequencer {
         static public const MASK_MODULATE:int = 32;
         /** mask all slur and pitch-bending commands (&amp;,&amp;&amp;,*) */
         static public const MASK_SLUR:int = 64;
-        
         
         // _processMode
         static private const NORMAL  :int = 0;
@@ -135,7 +134,8 @@ package org.si.sion.sequencer {
         private var _priority:int;          // track priority
 
         // settings
-        private var _channelModuleSetting:SiMMLChannelSetting;  // selected module's setting
+        private var _channelModuleSetting:SiMMLChannelSetting;          // selected module's setting
+        private var _channelModuleRestriction:SiMMLChannelRestriction;  // module restriction type
         private var _velocityMode:int;   // velocity mode 
         private var _expressionMode:int; // expression mode
         private var _velocity:int;       // velocity[0-256-512]
@@ -333,6 +333,9 @@ package org.si.sion.sequencer {
         /** mml data to play. this value only is available in the track playing mml sequence */
         public function get mmlData() : SiMMLData { return _mmlData; }
         
+        /** module restriction type @see SiMMLChannelRestriction */
+        public function get channelModuleRestriction() : int { return _channelModuleRestriction.type; }
+        
         /** @private [internal] bpm setting. refer from SiMMLSequencer */
         internal function get _bpmSetting() : BeatPerMinutes { 
             return ((_internalTrackID & _sion_internal::TRACK_TYPE_FILTER) != MML_TRACK && _mmlData) ? _mmlData._initialBPM : null;
@@ -344,6 +347,8 @@ package org.si.sion.sequencer {
             if (!_isDisposable || isPlaySequence) return 0;
             return _priority;
         }
+        
+        
         
         
     // constructor
@@ -491,6 +496,18 @@ package org.si.sion.sequencer {
         }
         
         
+        /** restrict channel module type 
+         *  @param restrictionModule module restriction type, defined in SiMMLChannelRestriction
+         *  @param channelNum channel number
+         *  @see SiMMLChannelRestriction
+         */
+        public function restrictModule(restrictionModule:int, channelNum:int) {
+            //setChannelModuleType();
+            _channelModuleRestriction = type;
+        }
+
+        
+        
         
         
     // interfaces for mml command
@@ -534,6 +551,9 @@ package org.si.sion.sequencer {
          */
         public function setChannelModuleType(type:int, channelNum:int, toneNum:int=-1) : void
         {
+            // check restriction
+            if (_channelModuleRestriction.type != NO_RESTRICTION) return;
+            
             // change module type
             _channelModuleSetting = _table.channelModuleSetting[type];
             
@@ -778,6 +798,7 @@ package org.si.sion.sequencer {
             
             // channel module setting
             _channelModuleSetting = _table.channelModuleSetting[SiMMLTable.MT_PSG];
+            _channelModuleRestriction = NO_RESTRICTION;
             _channelNumber = 0;
             
             // initialize channel by _channelModuleSetting

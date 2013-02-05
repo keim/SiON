@@ -14,7 +14,7 @@ package org.si.sion.utils.soundfont {
     import org.si.sion.utils.*;
     import org.si.sion.module.*;
     import org.si.sion.sequencer.*;
-    
+    import org.si.utils.ByteArrayExt;
     
     /** Sound font loader. */
     public class SiONSoundFontLoader extends EventDispatcher
@@ -88,9 +88,14 @@ package org.si.sion.utils.soundfont {
          */
         public function loadBytes(bytes:ByteArray) : void {
             _binloader = null;
-            _swfloader = new Loader();
-            _addAllListeners(_swfloader.contentLoaderInfo);
-            _swfloader.loadBytes(bytes);
+            var signature:uint = bytes.readUnsignedInt();
+            if (signature == 0x0b535743) { // swf
+                _swfloader = new Loader();
+                _addAllListeners(_swfloader.contentLoaderInfo);
+                _swfloader.loadBytes(bytes);
+            } else if (signature == 0x04034b50) { // zip
+                
+            }
         }
         
         
@@ -150,6 +155,23 @@ package org.si.sion.utils.soundfont {
                 _compileSystemCommand(Translator.extractSystemCommand(container.mml));
                 break;
             }
+        }
+        
+        
+        private function _analyzeZip(bytes:ByteArray) : void
+        {
+            var fileList:Vector.<ByteArrayExt> = new ByteArrayExt(bytes).expandZipFile();
+            var i:int, imax:int = fileList.length, sounds:Array = {}, mml:String, snd:Sound, file:ByteArrayExt;
+            for (i=0; i<imax; i++) {
+                file = fileList[i];
+                if (/\.mp3$/.test(file.name)) {
+                    sounds[file.name] = snd = new Sound();
+                    snd.loadCompressedDataFromByteArray(file, file.length);
+                } else {
+                    mml = file.readUTF();
+                }
+            }
+            _compileSystemCommand(Translator.extractSystemCommand(mml));
         }
         
         
