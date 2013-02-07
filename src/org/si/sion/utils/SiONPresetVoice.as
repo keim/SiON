@@ -49,6 +49,10 @@ var bell2:SiONVoice = voiceList[2];                 // access voice by index
         static public const INCLUDE_WAVETABLE:int = 16;
         /** Flag to include single voice drum voices. */
         static public const INCLUDE_SINGLE_DRUM:int = 32;
+        /** Flag to include YM2413 preset voices. */
+        static public const INCLUDE_YM2413:int = 64;
+        /** Flag to include VC7 preset voices. */
+        static public const INCLUDE_VC7:int = 128;
         /** Flag to include all voices. */
         static public const INCLUDE_ALL:int = 0xffff;
         

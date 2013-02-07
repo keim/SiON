@@ -67,8 +67,9 @@ package org.si.sion.module {
         static public const PT_OPM_NOISE:int = 3;
         static public const PT_PSG_NOISE:int = 4;
         static public const PT_APU_NOISE:int = 5;
-//        static public const PT_APU_DPCM:int = 6;
-        static public const PT_MAX:int = 6;
+        static public const PT_GB_NOISE:int = 6;
+//        static public const PT_APU_DPCM:int = 7;
+        static public const PT_MAX:int = 7;
                 
         // pulse generator type (0-511)
         static public const PG_SINE       :int = 0;     // sine wave
@@ -82,6 +83,8 @@ package org.si.sion.module {
         static public const PG_SYNC_LOW   :int = 8;     // pseudo sync (low freq.)
         static public const PG_SYNC_HIGH  :int = 9;     // pseudo sync (high freq.)
         static public const PG_OFFSET     :int = 10;    // offset
+        static public const PG_SAW_VC6    :int = 11;    // vc6 saw (32 samples saw)
+                                                        // ( 12-  15) reserved
                                                         // ( 11-  15) reserved
         static public const PG_NOISE_WHITE:int = 16;    // 16k white noise
         static public const PG_NOISE_PULSE:int = 17;    // 16k pulse noise
@@ -591,6 +594,23 @@ package org.si.sion.module {
             pitchTable[PT_APU_NOISE] = table;
             phaseStepShiftFilter[PT_APU_NOISE] = 0xffffffff;
             
+            // Game boy noise period
+            var gb_nf:Array = [2,4,8,12,16,20,24,28,32,40,48,56,64,80,96,112, 128,160,192,224,256,320,384,448,512,640,768,896,1024,1280,1536,1792,
+                               2048,2560,3072,3584,4096,5120,6144,7168,8192,10240,12288,14336,16384,20480,24576,28672,
+                               32768,40960,49152,57344,65536,81920,98304,114688,131072,163840,196608,229376,262144,327680,393216,458752];
+            imax  = 64<<HALF_TONE_BITS;
+            table = new Vector.<int>(imax, true);
+            // noise_phase_shift = ((1<<PHASE_BIT)  /  ((nf/clock)[sec]  /  (1/44100)[sec])) >> (PHASE_BIT - waveTable.fixedBits)
+            n = PHASE_MAX * 1048576 / rate; // gb clock = 1048576
+            for (i=0; i<64; i++) {
+                iv = n / gb_nf[i];
+                for (j=0; j<HALF_TONE_RESOLUTION; j++) {
+                    table[(i<<HALF_TONE_BITS)+j] = iv;
+                }
+            }
+            pitchTable[PT_GB_NOISE] = table;
+            phaseStepShiftFilter[PT_GB_NOISE] = 0xffffffff;
+            
             
         // dt1 table
         //----------------------------------------
@@ -695,6 +715,11 @@ package org.si.sion.module {
             }
             waveTables[PG_SAW_UP]   = SiOPMWaveTable.alloc(table1);
             waveTables[PG_SAW_DOWN] = SiOPMWaveTable.alloc(table2);
+            table1 = new Vector.<int>(32, true);
+            for (i=0, p=-0.96875; i<32; i++, p+=0.0625) {
+                table1[i] = calcLogTableIndex(p);
+            }
+            waveTables[PG_SAW_VC6] = SiOPMWaveTable.alloc(table1);
             
         // triangle wave tables
         //------------------------------

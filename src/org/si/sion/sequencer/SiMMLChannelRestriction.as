@@ -29,17 +29,22 @@ package org.si.sion.sequencer {
         public   var type:int;
         /** @private module type */
         internal var _moduleType:int;
-        
+        /** @private */
+        internal var _waveTableLength:int;
+        /** @private */
+        internal var _waveTableBits:int;
         
         
         
     // constructor
     //--------------------------------------------------
         /** @private  */
-        function SiMMLChannelRestriction(type:int, moduleType:int)
+        function SiMMLChannelRestriction(type:int, moduleType:int, waveTableLength:int=0, waveTableBits:int=0)
         {
             this.type = type;
             this._moduleType = moduleType;
+            this._waveTableLength = waveTableLength;
+            this._waveTableBits = waveTableBits;
         }
         
         
