@@ -10,6 +10,7 @@ package org.si.sion.sequencer {
     import org.si.sion.module.SiOPMChannelParam;
     import org.si.sion.module.channels.SiOPMChannelManager;
     import org.si.sion.namespaces._sion_internal;
+    import org.si.sion.sequencer.simulator.*;
     
     
     /** table for sequencer */
@@ -17,24 +18,23 @@ package org.si.sion.sequencer {
     {
     // constants
     //--------------------------------------------------
-        // module types (0-9)
-        static public const MT_PSG   :int = 0;  // PSG(DCSG)
-        static public const MT_APU   :int = 1;  // FC pAPU
-        static public const MT_NOISE :int = 2;  // noise wave
-        static public const MT_MA3   :int = 3;  // MA3 wave form
-        static public const MT_CUSTOM:int = 4;  // SCC / custom wave table
-        static public const MT_ALL   :int = 5;  // all pgTypes
-        static public const MT_FM    :int = 6;  // FM sound module
-        static public const MT_PCM   :int = 7;  // PCM
-        static public const MT_PULSE :int = 8;  // pulse wave
-        static public const MT_RAMP  :int = 9;  // ramp wave
-        static public const MT_SAMPLE:int = 10; // sampler
-        static public const MT_KS    :int = 11; // karplus strong
-        static public const MT_GB    :int = 12; // gameboy
-        static public const MT_VRC6  :int = 13; // vrc6
-        static public const MT_MAX   :int = 14;
-        
-        static private const MT_ARRAY_SIZE:int = 11;
+        // module types (0-11)
+        static public const MT_PSG   :int = SiMMLSimulatorBase.MT_PSG;      // PSG(DCSG)
+        static public const MT_APU   :int = SiMMLSimulatorBase.MT_APU;      // FC pAPU
+        static public const MT_NOISE :int = SiMMLSimulatorBase.MT_NOISE;    // noise wave
+        static public const MT_MA3   :int = SiMMLSimulatorBase.MT_MA3;      // MA3 wave form
+        static public const MT_CUSTOM:int = SiMMLSimulatorBase.MT_CUSTOM;   // SCC / custom wave table
+        static public const MT_ALL   :int = SiMMLSimulatorBase.MT_ALL;      // all pgTypes
+        static public const MT_FM    :int = SiMMLSimulatorBase.MT_FM;       // FM sound module
+        static public const MT_PCM   :int = SiMMLSimulatorBase.MT_PCM;      // PCM
+        static public const MT_PULSE :int = SiMMLSimulatorBase.MT_PULSE;    // pulse wave
+        static public const MT_RAMP  :int = SiMMLSimulatorBase.MT_RAMP;     // ramp wave
+        static public const MT_SAMPLE:int = SiMMLSimulatorBase.MT_SAMPLE;   // sampler
+        static public const MT_KS    :int = SiMMLSimulatorBase.MT_KS;       // karplus strong
+        static public const MT_GB    :int = SiMMLSimulatorBase.MT_GB;       // gameboy
+        static public const MT_VRC6  :int = SiMMLSimulatorBase.MT_VRC6;     // vrc6
+        static public const MT_SID   :int = SiMMLSimulatorBase.MT_SID;      // sid
+        static public const MT_MAX   :int = SiMMLSimulatorBase.MT_MAX;
         
         
         // module restriction type
@@ -72,17 +72,19 @@ package org.si.sion.sequencer {
         static public const RESTRICT_WS :int = 14;
         /** module restriction as PC Engine : WM(32,5)x6 */
         static public const RESTRICT_PCE:int = 15;
+        /** module restriction as Commodole64 : SID*3 */
+        static public const RESTRICT_SID:int = 16;
         
         /** module restriction as OPL (YM3526/similar with YM2413;OPLL) : FM2x9 */
-        static public const RESTRICT_OPL :int = 16;
+        static public const RESTRICT_OPL :int = 17;
         /** module restriction as OPN (YM2203) : FM4x3,PSGx3 */
-        static public const RESTRICT_OPN  :int = 17;
+        static public const RESTRICT_OPN  :int = 18;
         /** module restriction as OPNA (YM2608) : FM4x6,PSGx3 */
-        static public const RESTRICT_OPNA :int = 18;
+        static public const RESTRICT_OPNA :int = 19;
         /** module restriction as OPM (YM2151) : FM4x8 */
-        static public const RESTRICT_OPM  :int = 19;
+        static public const RESTRICT_OPM  :int = 20;
         
-        static private const RESTRICTION_MAX:int = 20;
+        static private const RESTRICTION_MAX:int = 21;
         
         static public const ENV_TABLE_MAX:int = 512;
         static public const VOICE_MAX:int = 256;
@@ -195,7 +197,7 @@ package org.si.sion.sequencer {
             
             // Channel module setting
             var ms:SiMMLChannelSetting;
-            channelModuleSetting = new Array(MT_ARRAY_SIZE);
+            channelModuleSetting = new Array(MT_MAX);
             channelModuleSetting[MT_PSG]    = new SiMMLChannelSetting(MT_PSG,    SiOPMTable.PG_SQUARE,      3,   1, 4);   // PSG
             channelModuleSetting[MT_APU]    = new SiMMLChannelSetting(MT_APU,    SiOPMTable.PG_PULSE,       11,  2, 4);   // FC pAPU
             channelModuleSetting[MT_NOISE]  = new SiMMLChannelSetting(MT_NOISE,  SiOPMTable.PG_NOISE_WHITE, 16,  1, 16);  // noise
@@ -210,6 +212,7 @@ package org.si.sion.sequencer {
             channelModuleSetting[MT_KS]     = new SiMMLChannelSetting(MT_KS,     0,                         3,   1, 3);   // karplus strong (0-2 to choose seed generator algrism)
             channelModuleSetting[MT_GB]     = new SiMMLChannelSetting(MT_GB,     SiOPMTable.PG_PULSE,       11,  2, 4);   // Gameboy
             channelModuleSetting[MT_VRC6]   = new SiMMLChannelSetting(MT_VRC6,   SiOPMTable.PG_PULSE,       8,   1, 9);   // VRC6
+            channelModuleSetting[MT_SID]    = new SiMMLChannelSetting(MT_SID,    SiOPMTable.PG_PULSE,       8,   1, 9);   // SID
             
             // PSG setting
             ms = channelModuleSetting[MT_PSG];
@@ -230,7 +233,7 @@ package org.si.sion.sequencer {
             ms._pgTypeList[10] = SiOPMTable.PG_NOISE_SHORT;
             for (i=0; i<9;  i++) { ms._ptTypeList[i] = SiOPMTable.PT_PSG; }
             for (i=9; i<11; i++) { ms._ptTypeList[i] = SiOPMTable.PT_APU_NOISE; }
-            ms._initIndex      = 1;
+            ms._initVoiceIndex = 1;
             ms._voiceIndexTable[0] = 4;
             ms._voiceIndexTable[1] = 4;
             ms._voiceIndexTable[2] = 8;
@@ -242,7 +245,7 @@ package org.si.sion.sequencer {
             ms._pgTypeList[10] = SiOPMTable.PG_NOISE_GB_SHORT;
             for (i=0; i<9;  i++) { ms._ptTypeList[i] = SiOPMTable.PT_PSG; }
             for (i=9; i<11; i++) { ms._ptTypeList[i] = SiOPMTable.PT_GB_NOISE; }
-            ms._initIndex      = 1;
+            ms._initVoiceIndex = 1;
             ms._voiceIndexTable[0] = 4;
             ms._voiceIndexTable[1] = 4;
             ms._voiceIndexTable[2] = 8;
@@ -251,7 +254,7 @@ package org.si.sion.sequencer {
             ms = channelModuleSetting[MT_VRC6];
             ms._pgTypeList[9] = SiOPMTable.PG_SAW_VC6;
             ms._ptTypeList[9] = SiOPMTable.PT_PSG;
-            ms._initIndex     = 1;
+            ms._initVoiceIndex = 1;
             ms._voiceIndexTable[0] = 7;
             ms._voiceIndexTable[1] = 7;
             ms._voiceIndexTable[2] = 8;
@@ -455,11 +458,8 @@ package org.si.sion.sequencer {
             var ms:SiMMLChannelSetting = instance.channelModuleSetting[moduleType];
             
             if (ms._selectToneType == SiMMLChannelSetting.SELECT_TONE_NORMAL) {
-                if (toneNum == -1) {
-                    if (channelNum>=0 && channelNum<ms._voiceIndexTable.length) toneNum = ms._voiceIndexTable[channelNum];
-                    else channelNum = ms._initIndex;
-                }
-                if (toneNum <0 || toneNum >=ms._pgTypeList.length) toneNum = ms._initIndex;
+                if (toneNum == -1 && channelNum>=0 && channelNum<ms._voiceIndexTable.length) toneNum = ms._voiceIndexTable[channelNum];
+                if (toneNum <0 || toneNum >=ms._pgTypeList.length) toneNum = ms._initVoiceIndex;
                 return ms._pgTypeList[toneNum];
             }
             

@@ -121,12 +121,12 @@ package org.si.sion.sequencer.base {
             
             i = 0;
             while (i<length) {
-                param[i++] = e.data;
+                param[i] = e.data; i++;
                 if (e.next == null || e.next.id != PARAMETER) break;
                 e = e.next;
             }
             while (i<length) {
-                param[i++] = int.MIN_VALUE;
+                param[i] = int.MIN_VALUE; i++;
             }
             return e;
         }

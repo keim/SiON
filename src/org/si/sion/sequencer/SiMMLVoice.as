@@ -273,7 +273,7 @@ package org.si.sion.sequencer {
             updateVolumes = false;
             
             moduleType = 5;
-            channelNum = 0;
+            channelNum = -1;
             toneNum = -1;
             preferableNote = -1;
             

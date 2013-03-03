@@ -4,7 +4,7 @@
 //  Distributed under BSD-style license (see org.si.license.txt).
 //----------------------------------------------------------------------------------------------------
 
-package org.si.sion.sequencer {
+package org.si.sion.sequencer.simulator {
     import org.si.sion.sequencer.base.MMLSequence;
     import org.si.sion.module.SiOPMModule;
     import org.si.sion.module.SiOPMWavePCMTable;
@@ -14,8 +14,8 @@ package org.si.sion.sequencer {
     import org.si.sion.module.channels.SiOPMChannelBase;
 
     
-    /** @private SiOPM channel setting */
-    public class SiMMLChannelSetting
+    /** @private Module simulator controls "SiMMLTrack" (not SiOPMChannel) to simulate various modules. */
+    public class SiMMLModuleSimulatorBase
     {
     // constants
     //--------------------------------------------------
@@ -44,7 +44,7 @@ package org.si.sion.sequencer {
         
     // constructor
     //--------------------------------------------------
-        function SiMMLChannelSetting(type:int, offset:int, length:int, step:int, channelCount:int)
+        function SiMMLModuleSimulatorBase(type:int, offset:int, length:int, step:int, channelCount:int)
         {
             var i:int, idx:int;
             _table = SiOPMTable.instance;
@@ -118,7 +118,7 @@ package org.si.sion.sequencer {
         {
             if (voiceIndex == -1) return null;
             
-            var voice:SiMMLVoice;
+            var voice:SiMMLVoice, pcmTable:SiOPMWavePCMTable;
             
             switch (_selectToneType) {
             case SELECT_TONE_NORMAL:

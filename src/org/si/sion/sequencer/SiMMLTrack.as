@@ -318,9 +318,9 @@ package org.si.sion.sequencer {
         }
 
         
-        /** Channel number, set by 2nd argument of % command. Usually same as programNumber. @see programNumber */
+        /** Channel number, set by 2nd argument of % command. Usually same as programNumber (except for APU). @see programNumber */
         public function get channelNumber() : int { return _channelNumber; }
-        /** Program number, set by 2nd argument of % command and 1st arg. of &#64; command. Usually same as channelNumber. @see channelNumber */
+        /** Program number, set by 2nd argument of % command and 1st arg. of &#64; command. Usually same as channelNumber (except for APU). @see channelNumber */
         public function get programNumber() : int { return _voiceIndex; }
         
         /** output level = &#64;v * v * x. */
@@ -549,10 +549,10 @@ package org.si.sion.sequencer {
         
         /** Channel module type (%) and select tone (1st argument of '_&#64;').
          *  @param type Channel module type
-         *  @param channelNum Channel number. For %2-11, this value is same as 1st argument of '_&#64;'.
+         *  @param channelNum Channel number. For %2-11, this value is same as 1st argument of '_&#64;'. channel number of -1 ignores all voice settings by selectVoice.
          *  @param toneNum Tone number. Ussualy, this argument is used only in %0;PSG and %1;APU.
          */
-        public function setChannelModuleType(type:int, channelNum:int, toneNum:int=-1) : void
+        public function setChannelModuleType(type:int, channelNum:int=int.MIN_VALUE, toneNum:int=int.MIN_VALUE) : void
         {
             // check restriction
             if (_channelModuleRestriction.type != NO_RESTRICTION) return;
@@ -560,11 +560,11 @@ package org.si.sion.sequencer {
             // change module type
             _channelModuleSetting = _table.channelModuleSetting[type];
             
-            // reset operator pgType
+            // reset operator pgType, set SiMMLTrack._channelNumber inside
             _voiceIndex = _channelModuleSetting.initializeTone(this, channelNum, channel.bufferIndex);
             
             // select tone
-            if (toneNum != -1) {
+            if (toneNum >= 0) {
                 _voiceIndex = toneNum;
                 _channelModuleSetting.selectTone(this, toneNum);
             }
@@ -819,7 +819,7 @@ package org.si.sion.sequencer {
             _pitchBend = 0;
             _note = -1;
             channel = null;
-            _voiceIndex = _channelModuleSetting.initializeTone(this, 0, bufferIndex);
+            _voiceIndex = _channelModuleSetting.initializeTone(this, int.MIN_VALUE, bufferIndex);
             var tlTables:Vector.<Vector.<int>> = SiOPMTable.instance.eg_tlTables;
             channel.setVolumeTables(tlTables[_velocityMode], tlTables[_expressionMode]);
             
