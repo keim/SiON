@@ -6,6 +6,7 @@
 
 
 package org.si.sion.sequencer.simulator {
+    import org.si.sion.sequencer.SiMMLSimulatorBase;
     import org.si.sion.module.SiOPMTable;
     
     

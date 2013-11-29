@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------------
 
 package org.si.sion.sequencer.simulator {
+    import org.si.sion.sequencer.SiMMLSimulatorBase;
     import org.si.sion.module.SiOPMTable;
     import org.si.sion.sequencer.SiMMLTable;
     import org.si.sion.sequencer.base.MMLSequence;
@@ -16,7 +17,7 @@ package org.si.sion.sequencer.simulator {
         function SiMMLModuleSimulatorFM()
         {
             super(MT_FM, 1, false);
-            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(1, SiOPMTable.PG_SINE);
+            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(1, 0);
         }
         
         

@@ -5,11 +5,12 @@
 //----------------------------------------------------------------------------------------------------
 
 package org.si.sion.sequencer.simulator {
+    import org.si.sion.sequencer.SiMMLSimulatorBase;
     import org.si.sion.module.SiOPMTable;
     
     
     /** @private */
-    public class SiMMLModuleSimulatorWT
+    public class SiMMLModuleSimulatorWT extends SiMMLSimulatorBase
     {
         function SiMMLModuleSimulatorWT()
         {

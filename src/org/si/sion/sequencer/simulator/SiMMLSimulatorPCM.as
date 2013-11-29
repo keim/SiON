@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------------
 
 package org.si.sion.sequencer.simulator {
+    import org.si.sion.sequencer.SiMMLSimulatorBase;
     import org.si.sion.module.SiOPMTable;
     import org.si.sion.module.SiOPMChannelManager;
     
@@ -15,8 +16,8 @@ package org.si.sion.sequencer.simulator {
         function SiMMLModuleSimulatorPCM()
         {
             super(MT_PCM, 1, false);
-            this._channelType = SiOPMChannelManager.CT_CHANNEL_PCM;
-            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(1, SiOPMTable.PG_PCM);
+            this._channelType = SiOPMChannelManager.CT_CHANNEL_SAMPLER;
+            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(1, 0);
         }
     }
 }

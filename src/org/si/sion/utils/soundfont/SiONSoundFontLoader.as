@@ -6,6 +6,7 @@
 
 package org.si.sion.utils.soundfont {
     import flash.events.*;
+    import flash.media.*;
     import flash.net.*;
     import flash.display.Loader;
     import flash.system.LoaderContext;
@@ -161,7 +162,7 @@ package org.si.sion.utils.soundfont {
         private function _analyzeZip(bytes:ByteArray) : void
         {
             var fileList:Vector.<ByteArrayExt> = new ByteArrayExt(bytes).expandZipFile();
-            var i:int, imax:int = fileList.length, sounds:Array = {}, mml:String, snd:Sound, file:ByteArrayExt;
+            var i:int, imax:int = fileList.length, sounds:* = {}, mml:String, snd:Sound, file:ByteArrayExt;
             for (i=0; i<imax; i++) {
                 file = fileList[i];
                 if (/\.mp3$/.test(file.name)) {

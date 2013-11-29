@@ -4,7 +4,11 @@
 //  Distributed under BSD-style license (see org.si.license.txt).
 //----------------------------------------------------------------------------------------------------
 
-package org.si.sion.sequencer.simulator {
+package org.si.sion.sequencer {
+    import org.si.sion.sequencer.SiMMLTrack;
+    import org.si.sion.sequencer.base.MMLSequence;
+    import org.si.sion.sequencer.simulator.SiMMLSimulatorVoice;
+    import org.si.sion.sequencer.simulator.SiMMLSimulatorVoiceSet;
     import org.si.sion.sequencer.base.MMLSequence;
     import org.si.sion.module.SiOPMChannelParam;
     import org.si.sion.module.channels.SiOPMChannelManager;
@@ -60,7 +64,7 @@ package org.si.sion.sequencer.simulator {
             this._isSuitableForFMVoice = isSuitableForFMVoice;
             this._defaultOpeCount = 1;
             this._channelVoiceSet = new Vector.<SiMMLSimulatorVoiceSet>(channelCount);
-            this._defaultVoiceSet = null; 
+            this._defaultVoiceSet = null;
         }
         
         
