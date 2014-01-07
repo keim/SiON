@@ -99,8 +99,9 @@ package org.si.sion.module.channels {
          *  @param ws wave shape of plunk
          *  @param tension sustain rate of the tone
          */
-        public function setKarplusStrongParam(ar:int=48, dr:int=48, tl:int=0, fixedPitch:int=0, ws:int=SiOPMTable.PG_NOISE_PINK, tension:int=8) : void
+        public function setKarplusStrongParam(ar:int=48, dr:int=48, tl:int=0, fixedPitch:int=0, ws:int=-1, tension:int=8) : void
         {
+            if (ws==-1) ws = SiOPMTable.PG_NOISE_PINK;
             _ks_seedType = KS_SEED_DEFAULT;
             setAlgorism(1, 0);
             setFeedBack(0, 0);

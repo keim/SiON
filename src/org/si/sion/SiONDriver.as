@@ -697,7 +697,7 @@ driver.play("t100 l8 [ ccggaag4 ffeeddc4 | [ggffeed4]2 ]2");
         
         /** Set hash table of Sound instance refered from #SAMPLER and #PCMWAVE commands. You have to set this table BEFORE compile mml.
          */
-        public function setSoudReferenceTable(soundReferenceTable:* = null) : void
+        public function setSoundReferenceTable(soundReferenceTable:* = null) : void
         {
             SiOPMTable.instance.soundReference = soundReferenceTable || {};
         }
