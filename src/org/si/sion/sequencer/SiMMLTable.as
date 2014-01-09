@@ -37,6 +37,56 @@ package org.si.sion.sequencer {
         static public const MT_SID   :int = SiMMLSimulatorBase.MT_SID;      // sid
         static public const MT_MAX   :int = SiMMLSimulatorBase.MT_MAX;
         
+        
+        // module restriction type
+        /** no restrictions (standard SiON module) */
+        static public const NO_RESTRICTION:int = 0;
+        /** module restriction as PSG (AY-3-8910) : PSG3 */
+        static public const RESTRICT_PSG  :int = 1;
+        /** module restriction as SSG (YM2203) : PSG3 */
+        static public const RESTRICT_SSG  :int = 2;
+        /** module restriction as DCSG (SN76489) : PSG3,NZG1 */
+        static public const RESTRICT_DCSG :int = 3;
+        
+        /** module restriction as RP2A03 pAPU (NES) : APU2,TRI1,NZG1 */
+        static public const RESTRICT_APU  :int = 4;
+        /** module restriction as RP2C33 (Disc System) : WM(64,4)x1 */
+        static public const RESTRICT_FDS  :int = 5;
+        /** module restriction as N106 (NAMCO 106) : WM(32,4)x8 */
+        static public const RESTRICT_N106 :int = 6;
+        /** module restriction as MMC5 : APU2 */
+        static public const RESTRICT_MMC5 :int = 7;
+        /** module restriction as FME7 (Sunsoft 5B) : PSG3 */
+        static public const RESTRICT_FME7 :int = 8;
+        /** module restriction as VRC6 (KONAMI) : VRC2,SAW1 */
+        static public const RESTRICT_VRC6 :int = 9;
+        /** module restriction as VRC7 (KONAMI) : FM2x6 */
+        static public const RESTRICT_VRC7 :int = 10;
+        
+        /** module restriction as Game boy : APU2,WM(32,4)x1,NZG1 */
+        static public const RESTRICT_GB :int = 11;
+        /** module restriction as KONAMI SCC : WM(32,8)x5 */
+        static public const RESTRICT_SCC:int = 12;
+        /** module restriction as NAMCO C30 : WM(32,4)x8 */
+        static public const RESTRICT_WSG:int = 13;
+        /** module restriction as Wonder Swan : WM(32,4)x4 */
+        static public const RESTRICT_WS :int = 14;
+        /** module restriction as PC Engine : WM(32,5)x6 */
+        static public const RESTRICT_PCE:int = 15;
+        /** module restriction as Commodole64 : SID*3 */
+        static public const RESTRICT_SID:int = 16;
+        
+        /** module restriction as OPL (YM3526/similar with YM2413;OPLL) : FM2x9 */
+        static public const RESTRICT_OPL :int = 17;
+        /** module restriction as OPN (YM2203) : FM4x3,PSGx3 */
+        static public const RESTRICT_OPN  :int = 18;
+        /** module restriction as OPNA (YM2608) : FM4x6,PSGx3 */
+        static public const RESTRICT_OPNA :int = 19;
+        /** module restriction as OPM (YM2151) : FM4x8 */
+        static public const RESTRICT_OPM  :int = 20;
+        
+        static private const RESTRICTION_MAX:int = 21;
+        
         static public const ENV_TABLE_MAX:int = 512;
         static public const VOICE_MAX:int = 256;
         
@@ -46,6 +96,8 @@ package org.si.sion.sequencer {
     //--------------------------------------------------
         /** module setting table */
         public var channelModuleSetting:Array = null;
+        /** module restriction table */
+        public var channelModuleRestriction:Array = null;
         /** module setting table */
         public var effectModuleSetting:Array = null;
        
@@ -131,15 +183,7 @@ package org.si.sion.sequencer {
         /** singleton instance */
         static public function get instance() : SiMMLTable
         {
-            if (!_instance) {
-                _instance = new SiMMLTable();
-                
-                // setup OPLL default voices
-                _instance.presetVoiceYM2413    = _setupYM2413DefaultVoices(_instance.presetRegisterYM2413);
-                _instance.presetVoiceVRC7      = _setupYM2413DefaultVoices(_instance.presetRegisterVRC7);
-                _instance.presetVoiceVRC7Drums = _setupYM2413DefaultVoices(_instance.presetRegisterVRC7Drums);
-            }
-            return _instance;
+            return _instance || (_instance = new SiMMLTable());
         }
         
         
@@ -168,8 +212,8 @@ package org.si.sion.sequencer {
             channelModuleSetting[MT_SAMPLE] = new SiMMLChannelSetting(MT_SAMPLE, 0,                         4,   1, 4);   // sampler. this is based on SiOPMChannelSampler
             channelModuleSetting[MT_KS]     = new SiMMLChannelSetting(MT_KS,     0,                         3,   1, 3);   // karplus strong (0-2 to choose seed generator algrism)
             channelModuleSetting[MT_GB]     = new SiMMLChannelSetting(MT_GB,     SiOPMTable.PG_PULSE,       11,  2, 4);   // Gameboy
-            channelModuleSetting[MT_VRC6]   = new SiMMLChannelSetting(MT_VRC6,   SiOPMTable.PG_PULSE,       9,   1, 3);   // VRC6
-            channelModuleSetting[MT_SID]    = new SiMMLChannelSetting(MT_SID,    SiOPMTable.PG_PULSE,       4,   1, 3);   // SID
+            channelModuleSetting[MT_VRC6]   = new SiMMLChannelSetting(MT_VRC6,   SiOPMTable.PG_PULSE,       8,   1, 9);   // VRC6
+            channelModuleSetting[MT_SID]    = new SiMMLChannelSetting(MT_SID,    SiOPMTable.PG_PULSE,       8,   1, 9);   // SID
             
             // PSG setting
             ms = channelModuleSetting[MT_PSG];
@@ -209,8 +253,8 @@ package org.si.sion.sequencer {
             ms._voiceIndexTable[3] = 9;
             // VRC6 setting
             ms = channelModuleSetting[MT_VRC6];
-            ms._pgTypeList[8] = SiOPMTable.PG_SAW_VC6;
-            ms._ptTypeList[8] = SiOPMTable.PT_PSG;
+            ms._pgTypeList[9] = SiOPMTable.PG_SAW_VC6;
+            ms._ptTypeList[9] = SiOPMTable.PT_PSG;
             ms._initVoiceIndex = 1;
             ms._voiceIndexTable[0] = 7;
             ms._voiceIndexTable[1] = 7;
@@ -228,6 +272,37 @@ package org.si.sion.sequencer {
             // Karplus strong
             channelModuleSetting[MT_KS]._channelType = SiOPMChannelManager.CT_CHANNEL_KS;
             channelModuleSetting[MT_KS]._isSuitableForFMVoice = false;
+
+            
+            // restriction setting
+/*
+            channelModuleRestriction = new Array(RESTRICTION_MAX);
+            channelModuleRestriction[NO_RESTRICTION] = new SiMMLChannelRestriction(NO_RESTRICTION, MT_ALL);
+            channelModuleRestriction[RESTRICT_PSG]   = new SiMMLChannelRestriction(RESTRICT_PSG,   MT_PSG);
+            channelModuleRestriction[RESTRICT_SSG]   = new SiMMLChannelRestriction(RESTRICT_SSG,   MT_PSG);
+            channelModuleRestriction[RESTRICT_DCSG]  = new SiMMLChannelRestriction(RESTRICT_DCSG,  MT_PSG);
+            channelModuleRestriction[RESTRICT_APU]   = new SiMMLChannelRestriction(RESTRICT_APU,   MT_APU);
+            channelModuleRestriction[RESTRICT_FDS]   = new SiMMLChannelRestriction(RESTRICT_FDS,   MT_CUSTOM, 64, 4);
+            channelModuleRestriction[RESTRICT_N106]  = new SiMMLChannelRestriction(RESTRICT_N106,  MT_CUSTOM, 32, 4);
+            channelModuleRestriction[RESTRICT_MMC5]  = new SiMMLChannelRestriction(RESTRICT_MMC5,  MT_APU);
+            channelModuleRestriction[RESTRICT_FME7]  = new SiMMLChannelRestriction(RESTRICT_FME7,  MT_PSG);
+            channelModuleRestriction[RESTRICT_VRC6]  = new SiMMLChannelRestriction(RESTRICT_VRC6,  MT_VRC6);
+            channelModuleRestriction[RESTRICT_VRC7]  = new SiMMLChannelRestriction(RESTRICT_VRC7,  MT_FM);
+            channelModuleRestriction[RESTRICT_GB]    = new SiMMLChannelRestriction(RESTRICT_GB,    MT_GB, 32, 4);
+            channelModuleRestriction[RESTRICT_SCC]   = new SiMMLChannelRestriction(RESTRICT_SCC,   MT_CUSTOM, 32, 8);
+            channelModuleRestriction[RESTRICT_WSG]   = new SiMMLChannelRestriction(RESTRICT_WSG,   MT_CUSTOM, 32, 4);
+            channelModuleRestriction[RESTRICT_WS ]   = new SiMMLChannelRestriction(RESTRICT_WS,    MT_CUSTOM, 32, 4);
+            channelModuleRestriction[RESTRICT_PCE]   = new SiMMLChannelRestriction(RESTRICT_PCE,   MT_CUSTOM, 32, 5);
+            channelModuleRestriction[RESTRICT_OPL]   = new SiMMLChannelRestriction(RESTRICT_OPL,   MT_FM);
+            channelModuleRestriction[RESTRICT_OPN]   = new SiMMLChannelRestriction(RESTRICT_OPN,   MT_FM);
+            channelModuleRestriction[RESTRICT_OPNA]  = new SiMMLChannelRestriction(RESTRICT_OPNA,  MT_FM);
+            channelModuleRestriction[RESTRICT_OPM]   = new SiMMLChannelRestriction(RESTRICT_OPM,   MT_FM);
+*/
+
+            // setup OPLL default voices            
+            presetVoiceYM2413    = _setupYM2413DefaultVoices(presetRegisterYM2413);
+            presetVoiceVRC7      = _setupYM2413DefaultVoices(presetRegisterVRC7);
+            presetVoiceVRC7Drums = _setupYM2413DefaultVoices(presetRegisterVRC7Drums);
             
             // tables
             _masterEnvelops = new Vector.<SiMMLEnvelopTable>(ENV_TABLE_MAX);
@@ -262,14 +337,14 @@ package org.si.sion.sequencer {
             }
         }
         
-        static private function _setupYM2413DefaultVoices(registerMap:Vector.<uint>) : Vector.<SiMMLVoice>
+        private function _setupYM2413DefaultVoices(registerMap:Vector.<uint>) : Vector.<SiMMLVoice>
         {
             var voices:Vector.<SiMMLVoice> = new Vector.<SiMMLVoice>(registerMap.length >> 1), i:int, i2:int;
             for (i=i2=0; i<voices.length; i++,i2+=2) { voices[i] = _dumpYM2413Register(new SiMMLVoice(), registerMap[i2], registerMap[i2+1]); }
             return voices;
         }
         
-        static private function _dumpYM2413Register(voice:SiMMLVoice, u0:uint, u1:uint) : SiMMLVoice
+        private function _dumpYM2413Register(voice:SiMMLVoice, u0:uint, u1:uint) : SiMMLVoice
         {
             var i:int;
             var param:SiOPMChannelParam = voice.channelParam;

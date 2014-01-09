@@ -6,8 +6,8 @@
 
 package org.si.sion.utils.soundfont {
     import flash.events.*;
-    import flash.media.*;
     import flash.net.*;
+    import flash.media.Sound;
     import flash.display.Loader;
     import flash.system.LoaderContext;
     import flash.utils.ByteArray;
@@ -95,7 +95,7 @@ package org.si.sion.utils.soundfont {
                 _addAllListeners(_swfloader.contentLoaderInfo);
                 _swfloader.loadBytes(bytes);
             } else if (signature == 0x04034b50) { // zip
-                
+                _analyzeZip(bytes);
             }
         }
         
@@ -168,7 +168,7 @@ package org.si.sion.utils.soundfont {
                 if (/\.mp3$/.test(file.name)) {
                     sounds[file.name] = snd = new Sound();
                     snd.loadCompressedDataFromByteArray(file, file.length);
-                } else {
+                } else if (/\.mml$/.test(file.name)) {
                     mml = file.readUTF();
                 }
             }

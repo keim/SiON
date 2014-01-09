@@ -6,14 +6,13 @@
 
 
 package org.si.sion.sequencer.simulator {
-    import org.si.sion.sequencer.SiMMLSimulatorBase;
     import org.si.sion.module.SiOPMTable;
     
     
     /** @private */
-    public class SiMMLModuleSimulatorAPU extends SiMMLSimulatorBase
+    public class SiMMLSimulatorAPU extends SiMMLSimulatorBase
     {
-        function SiMMLModuleSimulatorAPU()
+        function SiMMLSimulatorAPU()
         {
             super(MT_APU, 4);
             

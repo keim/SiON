@@ -135,7 +135,6 @@ package org.si.sion.sequencer {
 
         // settings
         private var _channelModuleSetting:SiMMLChannelSetting;          // selected module's setting
-        private var _moduleRestriction:Boolean;                         // module restriction
         private var _velocityMode:int;   // velocity mode 
         private var _expressionMode:int; // expression mode
         private var _velocity:int;       // velocity[0-256-512]
@@ -146,7 +145,7 @@ package org.si.sion.sequencer {
         private var _note:int;           // note number
         private var _defaultFPS:int;     // default fps
         /** @private [internal] channel number. */
-        internal var _channelNumber:int; 
+        _sion_sequencer_internal var _channelNumber:int; 
         /** @private [internal] vcommand shift. */
         _sion_sequencer_internal var _vcommandShift:int;  // vcommand shift
         
@@ -333,9 +332,6 @@ package org.si.sion.sequencer {
         /** mml data to play. this value only is available in the track playing mml sequence */
         public function get mmlData() : SiMMLData { return _mmlData; }
         
-        /** module restriction */
-        public function get moduleRestriction() : Boolean { return _moduleRestriction; }
-        
         /** @private [internal] bpm setting. refer from SiMMLSequencer */
         internal function get _bpmSetting() : BeatPerMinutes { 
             return ((_internalTrackID & _sion_internal::TRACK_TYPE_FILTER) != MML_TRACK && _mmlData) ? _mmlData._initialBPM : null;
@@ -498,7 +494,6 @@ package org.si.sion.sequencer {
         
         
         
-        
     // interfaces for mml command
     //--------------------------------------------------
         /** Set note immediately. 
@@ -540,9 +535,6 @@ package org.si.sion.sequencer {
          */
         public function setChannelModuleType(type:int, channelNum:int=int.MIN_VALUE, toneNum:int=int.MIN_VALUE) : void
         {
-            // check restriction
-            if (_moduleRestriction) return;
-            
             // change module type
             _channelModuleSetting = _table.channelModuleSetting[type];
             
@@ -788,7 +780,6 @@ package org.si.sion.sequencer {
             // channel module setting
             _channelModuleSetting = _table.channelModuleSetting[SiMMLTable.MT_PSG];
             _channelNumber = 0;
-            _moduleRestriction = false;
             
             // initialize channel by _channelModuleSetting
             if (_mmlData) {
@@ -868,7 +859,7 @@ package org.si.sion.sequencer {
         
         
         /** @private [internal] reset volume offset. */
-        internal function _resetVolumeOffset() : void
+        _sion_sequencer_internal function _resetVolumeOffset() : void
         {
             channel.offsetVolume(_expression, _velocity);
         }

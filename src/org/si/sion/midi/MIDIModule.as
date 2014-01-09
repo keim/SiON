@@ -86,7 +86,6 @@ package org.si.sion.midi {
                 midiChannels[ch].eventTriggerID = ch;
             }
             _portOffset = 0;
-            _portNumber = 0;
         }
         /** free operator count */
         public function get freeOperatorCount() : int { return _freeOperators.length; }

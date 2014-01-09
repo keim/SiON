@@ -6,6 +6,8 @@
 
 
 package org.si.midi {
+    import flash.events.*;
+    import flash.net.*;
     import org.si.sion.*;
     import org.si.sion.midi.*;
     import org.si.sion.events.*;
@@ -35,7 +37,7 @@ package org.si.midi {
         
         
         /** tempo */
-        static public function get tempo() : Boolean { return driver.bpm; }
+        static public function get tempo() : Number { return driver.bpm; }
         
         /** CPU loading [%] */
         static public function get cpuLoading() : Number { return driver.processTime*0.1; }
@@ -79,6 +81,7 @@ package org.si.midi {
             if (smfData.isAvailable) _play(smfData);
             else smfData.addEventListener(Event.COMPLETE, _waitAndPlay);
             driver.fadeIn(fadeInTime);
+            return smfData;
         }
         
         
@@ -129,7 +132,7 @@ package org.si.midi {
         {
             var smfData:SMFData = _cache[url];
             if (!smfData) {
-                smfData = new smfData();
+                smfData = new SMFData();
                 smfData.load(new URLRequest(url));
                 _cache[url] = smfData;
             }
@@ -154,7 +157,7 @@ package org.si.midi {
         
         static private function _waitAndPlay(e:Event) : void
         {
-            _play(e.target);
+            _play(SMFData(e.target));
         }
         
         

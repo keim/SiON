@@ -5,14 +5,13 @@
 //----------------------------------------------------------------------------------------------------
 
 package org.si.sion.sequencer.simulator {
-    import org.si.sion.sequencer.SiMMLSimulatorBase;
     import org.si.sion.module.SiOPMTable;
     
     
     /** @private */
-    public class SiMMLModuleSimulatorPSG
+    public class SiMMLSimulatorPSG extends SiMMLSimulatorBase
     {
-        function SiMMLModuleSimulatorPSG()
+        function SiMMLSimulatorPSG()
         {
             super(MT_PSG, 3);
             this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(2);

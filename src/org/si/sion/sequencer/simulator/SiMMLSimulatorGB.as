@@ -6,14 +6,13 @@
 
 
 package org.si.sion.sequencer.simulator {
-    import org.si.sion.sequencer.SiMMLSimulatorBase;
     import org.si.sion.module.SiOPMTable;
     
     
     /** @private */
-    public class SiMMLModuleSimulatorGB extends SiMMLSimulatorBase
+    public class SiMMLSimulatorGB extends SiMMLSimulatorBase
     {
-        function SiMMLModuleSimulatorGB()
+        function SiMMLSimulatorGB()
         {
             super(MT_GB, 4);
             

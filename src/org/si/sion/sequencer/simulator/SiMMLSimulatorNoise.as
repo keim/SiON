@@ -5,14 +5,13 @@
 //----------------------------------------------------------------------------------------------------
 
 package org.si.sion.sequencer.simulator {
-    import org.si.sion.sequencer.SiMMLSimulatorBase;
     import org.si.sion.module.SiOPMTable;
     
     
     /** @private */
-    public class SiMMLModuleSimulatorNoise extends SiMMLSimulatorBase
+    public class SiMMLSimulatorNoise extends SiMMLSimulatorBase
     {
-        function SiMMLModuleSimulatorNoise()
+        function SiMMLSimulatorNoise()
         {
             super(MT_NOISE, 1);
             this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(16, SiOPMTable.PG_NOISE_WHITE);

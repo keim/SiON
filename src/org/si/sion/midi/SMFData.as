@@ -62,7 +62,7 @@ package org.si.sion.midi {
     // properties
     //--------------------------------------------------------------------------------
         /** Is avaiblable ? */
-        public function isAvailable() : Boolean { return (numTracks > 0); }
+        public function get isAvailable() : Boolean { return (numTracks > 0); }
         
         
         /** to string. */

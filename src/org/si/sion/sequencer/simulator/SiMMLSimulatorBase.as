@@ -4,15 +4,13 @@
 //  Distributed under BSD-style license (see org.si.license.txt).
 //----------------------------------------------------------------------------------------------------
 
-package org.si.sion.sequencer {
+package org.si.sion.sequencer.simulator {
     import org.si.sion.sequencer.SiMMLTrack;
-    import org.si.sion.sequencer.base.MMLSequence;
-    import org.si.sion.sequencer.simulator.SiMMLSimulatorVoice;
-    import org.si.sion.sequencer.simulator.SiMMLSimulatorVoiceSet;
     import org.si.sion.sequencer.base.MMLSequence;
     import org.si.sion.module.SiOPMChannelParam;
     import org.si.sion.module.channels.SiOPMChannelManager;
     import org.si.sion.module.channels.SiOPMChannelBase;
+    import org.si.sion.sequencer.base._sion_sequencer_internal;
 
     
     /** @private Module simulator controls "SiMMLTrack" (not SiOPMChannel) to simulate various modules. */
@@ -44,7 +42,7 @@ package org.si.sion.sequencer {
     // variables
     //--------------------------------------------------
         /** module type */
-        public   var type:int;
+        public var type:int;
         
         protected var _channelType:int;
         protected var _defaultVoiceSet:SiMMLSimulatorVoiceSet;
@@ -64,7 +62,7 @@ package org.si.sion.sequencer {
             this._isSuitableForFMVoice = isSuitableForFMVoice;
             this._defaultOpeCount = 1;
             this._channelVoiceSet = new Vector.<SiMMLSimulatorVoiceSet>(channelCount);
-            this._defaultVoiceSet = null;
+            this._defaultVoiceSet = null; 
         }
         
         
@@ -91,7 +89,7 @@ package org.si.sion.sequencer {
             } else {
                 // initialize channel
                 track.channel.initialize(track.channel, bufferIndex);
-                track._resetVolumeOffset();
+                track._sion_sequencer_internal::_resetVolumeOffset();
             }
             
             
@@ -104,7 +102,7 @@ package org.si.sion.sequencer {
             var voiceIndex:int = voiceSet.initVoiceIndex;
             
             // track setup
-            track._channelNumber = (chNum < 0) ? -1 : chNum; // track has channel number include -1.
+            track._sion_sequencer_internal::_channelNumber = (chNum < 0) ? -1 : chNum; // track has channel number include -1.
             track.channel.setChannelNumber(chNumRestrict);   // channel requires restrticted channel number
             track.channel.setAlgorism(_defaultOpeCount, 0);  //
             
@@ -123,7 +121,7 @@ package org.si.sion.sequencer {
         {
             if (voiceIndex == -1) return null;
             
-            var chNum:int = track._channelNumber, 
+            var chNum:int = track._sion_sequencer_internal::_channelNumber, 
                 voiceSet:SiMMLSimulatorVoiceSet = _defaultVoiceSet;
             if (chNum>=0 && chNum<_channelVoiceSet.length && _channelVoiceSet[chNum]) voiceSet = _channelVoiceSet[chNum];
             if (voiceIndex < 0 || voiceIndex >= voiceSet.voices.length) voiceIndex = voiceSet.initVoiceIndex;

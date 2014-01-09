@@ -1,3 +1,4 @@
+
 //----------------------------------------------------------------------------------------------------
 // class for SiMML sequencer setting
 //  Copyright (c) 2008 keim All rights reserved.

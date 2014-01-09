@@ -5,19 +5,21 @@
 //----------------------------------------------------------------------------------------------------
 
 package org.si.sion.sequencer.simulator {
-    import org.si.sion.sequencer.SiMMLSimulatorBase;
+    import org.si.sion.sequencer.SiMMLTrack;
     import org.si.sion.module.SiOPMTable;
+    import org.si.sion.sequencer.SiMMLVoice;
     import org.si.sion.sequencer.SiMMLTable;
     import org.si.sion.sequencer.base.MMLSequence;
+    import org.si.sion.sequencer.base._sion_sequencer_internal;
     
     
     /** @private */
-    public class SiMMLModuleSimulatorFM extends SiMMLSimulatorBase
+    public class SiMMLSimulatorFM extends SiMMLSimulatorBase
     {
-        function SiMMLModuleSimulatorFM()
+        function SiMMLSimulatorFM()
         {
             super(MT_FM, 1, false);
-            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(1, 0);
+            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(1, SiOPMTable.PG_SINE);
         }
         
         
@@ -36,7 +38,7 @@ package org.si.sion.sequencer.simulator {
                 } else {
                     // this module changes only channel params, not track params.
                     track.channel.setSiOPMChannelParam(voice.channelParam, false, false);
-                    track._resetVolumeOffset();
+                    track._sion_sequencer_internal::_resetVolumeOffset();
                     return (voice.channelParam.initSequence.isEmpty()) ? null : voice.channelParam.initSequence;
                 }
             }

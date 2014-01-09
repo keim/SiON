@@ -12,6 +12,7 @@ package org.si.sion.sequencer {
     import org.si.sion.module.SiOPMChannelParam;
     import org.si.sion.module.channels.SiOPMChannelManager;
     import org.si.sion.module.channels.SiOPMChannelBase;
+    import org.si.sion.sequencer.base._sion_sequencer_internal;
 
     
     /** @private SiOPM channel setting */
@@ -89,7 +90,7 @@ package org.si.sion.sequencer {
             } else {
                 // initialize channel
                 track.channel.initialize(track.channel, bufferIndex);
-                track._resetVolumeOffset();
+                track._sion_sequencer_internal::_resetVolumeOffset();
             }
 
             // initialize
@@ -99,7 +100,7 @@ package org.si.sion.sequencer {
             if (0<=chNum && chNum<_voiceIndexTable.length) voiceIndex = _voiceIndexTable[chNum];
             else chNumRestrict = 0;
             // track has channel number include -1.
-            track._channelNumber = (chNum < 0) ? -1 : chNum;
+            track._sion_sequencer_internal::_channelNumber = (chNum < 0) ? -1 : chNum;
             // channel requires restrticted channel number
             track.channel.setChannelNumber(chNumRestrict);
             track.channel.setAlgorism(_defaultOpeCount, 0);
@@ -135,7 +136,7 @@ package org.si.sion.sequencer {
                     } else {
                         // this module changes only channel params, not track params.
                         track.channel.setSiOPMChannelParam(voice.channelParam, false, false);
-                        track._resetVolumeOffset();
+                        track._sion_sequencer_internal::_resetVolumeOffset();
                         return (voice.channelParam.initSequence.isEmpty()) ? null : voice.channelParam.initSequence;
                     }
                 }
