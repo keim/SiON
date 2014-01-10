@@ -102,7 +102,7 @@ package org.si.sion.module {
          *  @param data wave data, Sound, Vector.&lt;Number&gt; or Vector.&lt;int&gt; is available. The Sound is extracted when the length is shorter than SiOPMWaveSamplerData.extractThreshold[msec].
          *  @param ignoreNoteOff flag to ignore note off
          *  @param pan pan of this sample [-64 - 64].
-         *  @param srcChannelCount channel count of source data, this argument is only available when data type is Vector.<Number>.
+         *  @param srcChannelCount channel count of source data, this argument is only available when data type is Vector.&lt;Number&gt;.
          *  @param channelCount channel count of this data, 0 sets same with srcChannelCount
          *  @param peakList peak list for time stretching
          */
@@ -121,7 +121,7 @@ package org.si.sion.module {
          *  @param data wave data, Sound, Vector.&lt;Number&gt; or Vector.&lt;int&gt; is available. The Sound is extracted when the length is shorter than SiOPMWaveSamplerData.extractThreshold[msec].
          *  @param ignoreNoteOff flag to ignore note off
          *  @param pan pan of this sample.
-         *  @param srcChannelCount channel count of source data, this argument is only available when data type is Vector.<Number>.
+         *  @param srcChannelCount channel count of source data, this argument is only available when data type is Vector.&lt;Number&gt;.
          *  @param channelCount channel count of this data, 0 sets same with srcChannelCount. This argument is ignored when the data is not extracted.
          *  @see #extractThreshold
          *  @return this instance.

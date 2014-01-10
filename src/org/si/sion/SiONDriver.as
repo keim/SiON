@@ -108,7 +108,7 @@ driver.play("t100 l8 [ ccggaag4 ffeeddc4 | [ggffeed4]2 ]2");
     // constants
     //----------------------------------------
         /** version number */
-        static public const VERSION:String = "0.6.5.3";
+        static public const VERSION:String = "0.6.6.0";
         
         
         /** note-on exception mode "ignore", SiON does not consider about track ID's conflict in noteOn() method (default). */

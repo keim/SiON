@@ -1,0 +1,19 @@
+<flex-config xmlns="http://www.adobe.com/2006/flex-config">
+  <doc-sources>
+    <path-element>../src/org/si</path-element>
+  </doc-sources>
+  <compiler>
+    <external-library-path>
+      <path-element>${flexlib}/libs/player/11.9/playerglobal.swc</path-element>
+    </external-library-path>
+    
+    <source-path>
+      <path-element>../src</path-element>
+    </source-path>
+  </compiler>
+  <window-title>SiON version 0.66 API Documentation</window-title>
+  <main-title>SiON version 0.66 API Documentation</main-title>
+  <footer><![CDATA[&amp;copy; 2009-2014 keim_at_si]]></footer>
+  <package-description-file>./asdoc-packages.xml</package-description-file>
+  <output>../_release/asdoc</output>
+</flex-config>

@@ -210,7 +210,7 @@ package org.si.sion.utils {
         
         
         /** merage peak list
-         *  @param arrayOfPeakList Array of peakList(Vector.<Number> type) to marge
+         *  @param arrayOfPeakList Array of peakList(Vector.&lt;Number&gt; type) to marge
          *  @param singlePeakLength time distance to merge near peaks as 1 peak
          *  @return merged peak list
          */ 

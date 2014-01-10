@@ -36,7 +36,7 @@ package org.si.sion.utils {
         public var timeSignatureNumber:int;   // short
         /** beat per minutes */
         public var bpm:Number;       // float
-
+
         
         /** chunks of wave data */
         protected var _waveDataChunks:* = null;
@@ -84,7 +84,7 @@ package org.si.sion.utils {
         
     // properties
     //--------------------------------------------------
-        /** samples in Vector.<Number> with properties of sampleRate and channels. */
+        /** samples in Vector.&lt;Number&gt; with properties of sampleRate and channels. */
         public function get samples() : Vector.<Number> { 
             if (_outputSampleRate == _sampleRate && _outputChannels == _channels) {
 //trace("get sample from raw sample");
@@ -181,7 +181,7 @@ package org.si.sion.utils {
             this.timeSignatureDenominator = 4;
             this.timeSignatureNumber = 4;
             this.bpm = 0;
-        }
+        }
         
         
         /** @private */
@@ -204,7 +204,7 @@ package org.si.sion.utils {
         
     // operations
     //--------------------------------------------------
-        /** load sample from Vector.<Number> 
+        /** load sample from Vector.&lt;Number&gt; 
          *  @param src source vector of Number.
          *  @param channels channel count of source.
          *  @param sampleRate sample rate of source.
@@ -253,7 +253,7 @@ package org.si.sion.utils {
         }
         
         
-        /** extract to Vector.<Number> 
+        /** extract to Vector.&lt;Number&gt; 
          *  @param dst 
          *  @param length 
          *  @param offset 

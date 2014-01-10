@@ -54,7 +54,7 @@ package org.si.sion.sequencer {
         
     // operations
     //--------------------------------------------------------------------------------
-        /** convert to Vector.<int> */
+        /** convert to Vector.&lt;int&gt; */
         public function toVector(length:int, min:int=-65536, max:int=65536, dst:Vector.<int>=null) : Vector.<int>
         {
             if (!dst) dst = new Vector.<int>();

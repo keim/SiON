@@ -65,7 +65,7 @@ package org.si.sion.module {
         /** Constructor. 
          *  @param data wave data, Sound, Vector.&lt;Number&gt; or Vector.&lt;int&gt; is available. The Sound instance is extracted internally.
          *  @param samplingPitch sampling data's original pitch (noteNumber*64)
-         *  @param srcChannelCount channel count of source data, this argument is only available when data type is Vector.<Number>.
+         *  @param srcChannelCount channel count of source data, this argument is only available when data type is Vector.&lt;Number&gt;.
          *  @param channelCount channel count of this data, 0 sets same with srcChannelCount
          */
         function SiOPMWavePCMData(data:*=null, samplingPitch:int=4416, srcChannelCount:int=2, channelCount:int=0)
@@ -82,7 +82,7 @@ package org.si.sion.module {
         /** Initializer.
          *  @param data wave data, Sound, Vector.&lt;Number&gt; or Vector.&lt;int&gt; is available. The Sound instance is extracted internally.
          *  @param samplingPitch sampling data's original note
-         *  @param srcChannelCount channel count of source data, this argument is only available when data type is Vector.<Number>.
+         *  @param srcChannelCount channel count of source data, this argument is only available when data type is Vector.&lt;Number&gt;.
          *  @param channelCount channel count of this data, 0 sets same with srcChannelCount
          *  @return this instance.
          */
@@ -138,7 +138,7 @@ package org.si.sion.module {
         }
         
         
-        /** Loop tail samples, this function updates endPoint and loopPoint. This function is called from slice() when loopPoint < -1.
+        /** Loop tail samples, this function updates endPoint and loopPoint. This function is called from slice() when loopPoint &lt; -1.
          *  @param sampleCount looping sample count.
          *  @param tailMargin margin for end point. sample count from tail of wave data (consider mp3's end gap).
          *  @param crossFade using short cross fading to reduce sample step noise while looping.

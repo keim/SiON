@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<overviews>
+  <all-packages>
+    <description>See org.si.sion.SiONDriver first</description>
+  </all-packages>
+  <all-classes>
+    <description>See org.si.sion.SiONDriver first</description>
+  </all-classes>
+  <packages>
+      <package name="org.si.sion">                  <shortDescription>package for SiON basic modules</shortDescription></package>
+      <package name="org.si.sion.effector">         <shortDescription>package for all Effectors</shortDescription></package>
+      <package name="org.si.sion.utils">            <shortDescription>package for utilities</shortDescription></package>
+      <package name="org.si.sion.utils.soundfont">  <shortDescription>package for SiON SoundFont</shortDescription></package>
+      <package name="org.si.sion.utils.soundloader"><shortDescription>package for Bulk resource loader optimized for SiON</shortDescription></package>
+      <package name="org.si.sound">                 <shortDescription>package for SiON Sound Object (advanced synthesizer)</shortDescription></package>
+      <package name="org.si.sound.synthesizers">    <shortDescription>package for all Synthesizers (voice settings) for Sound Object</shortDescription></package>
+  </packages>
+</overviews>

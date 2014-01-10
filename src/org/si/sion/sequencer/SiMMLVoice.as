@@ -52,9 +52,9 @@ package org.si.sion.sequencer {
         
         /** default gate time (same as "q" command * 0.125), set Number.NaN to ignore. @default Number.NaN */
         public var defaultGateTime:Number;
-        /** [Not implemented in current version] default absolute gate time (same as 1st argument of "@q" command), set -1 to ignore. @default -1 */
+        /** [Not implemented in current version] default absolute gate time (same as 1st argument of "&#64;q" command), set -1 to ignore. @default -1 */
         public var defaultGateTicks:int;
-        /** [Not implemented in current version] default key on delay (same as 2nd argument "@q" command), set -1 to ignore. @default -1 */
+        /** [Not implemented in current version] default key on delay (same as 2nd argument "&#64;q" command), set -1 to ignore. @default -1 */
         public var defaultKeyOnDelayTicks:int;
         /** track pitch shift (same as "k" command). @default 0 */
         public var pitchShift:int;
