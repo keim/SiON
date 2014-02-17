@@ -9,7 +9,7 @@ package org.si.sion.sequencer.simulator {
     import org.si.sion.module.SiOPMTable;
     
     
-    /** @private */
+    /** MOS Tech 8580 SID chip simulator */
     public class SiMMLSimulatorSID extends SiMMLSimulatorBase
     {
         function SiMMLSimulatorSID()

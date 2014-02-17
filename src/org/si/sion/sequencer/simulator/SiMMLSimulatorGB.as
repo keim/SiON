@@ -9,7 +9,7 @@ package org.si.sion.sequencer.simulator {
     import org.si.sion.module.SiOPMTable;
     
     
-    /** @private */
+    /** Nintendo Gameboy simulator */
     public class SiMMLSimulatorGB extends SiMMLSimulatorBase
     {
         function SiMMLSimulatorGB()

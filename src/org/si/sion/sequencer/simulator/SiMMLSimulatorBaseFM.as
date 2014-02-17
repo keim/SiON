@@ -1,8 +1,9 @@
 //----------------------------------------------------------------------------------------------------
-// class for Single operator of SiOPM wavelet
+// Base class of all FM sound chip simulator
 //  Copyright (c) 2008 keim All rights reserved.
 //  Distributed under BSD-style license (see org.si.license.txt).
 //----------------------------------------------------------------------------------------------------
+
 
 package org.si.sion.sequencer.simulator {
     import org.si.sion.sequencer.SiMMLTrack;
@@ -13,17 +14,24 @@ package org.si.sion.sequencer.simulator {
     import org.si.sion.sequencer.base._sion_sequencer_internal;
     
     
-    /** @private */
-    public class SiMMLSimulatorFM extends SiMMLSimulatorBase
+    /** Base class of all FM sound chip simulator */
+    public class SiMMLSimulatorBaseFM extends SiMMLSimulatorBase
     {
-        function SiMMLSimulatorFM()
+        function SiMMLSimulatorBaseFM(type:int, channelCount:int)
         {
-            super(MT_FM, 1, false);
-            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(1, SiOPMTable.PG_SINE);
+            super(type, channelCount, new SiMMLSimulatorVoiceSet(512, SiOPMTable.PG_SINE), false);
         }
         
         
+        /** @inherite */
         override public function selectTone(track:SiMMLTrack, voiceIndex:int) : MMLSequence
+        {
+            return _selectFMTone(track, voiceIndex);
+        }
+
+
+        /** @private */
+        protected function _selectFMTone(track:SiMMLTrack, voiceIndex:int) : MMLSequence
         {
             if (voiceIndex == -1) return null;
             

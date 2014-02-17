@@ -9,14 +9,13 @@ package org.si.sion.sequencer.simulator {
     import org.si.sion.module.channels.SiOPMChannelManager;
     
     
-    /** @private */
+    /** Simple sampler simulator */
     public class SiMMLSimulatorSampler extends SiMMLSimulatorBase
     {
         function SiMMLSimulatorSampler()
         {
             super(MT_SAMPLE, 1, false);
-            this._channelType = SiOPMChannelManager.CT_CHANNEL_SAMPLER;
-            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(1, 0);
+            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(SiOPMChannelManager.CT_CHANNEL_SAMPLER, 1, 0);
         }
     }
 }

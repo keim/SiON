@@ -9,7 +9,7 @@ package org.si.sion.sequencer.simulator {
     import org.si.sion.module.SiOPMTable;
     
     
-    /** @private */
+    /** KONAMI VRC6 Simulator */
     public class SiMMLSimulatorVRC6 extends SiMMLSimulatorBase
     {
         function SiMMLSimulatorVRC6()

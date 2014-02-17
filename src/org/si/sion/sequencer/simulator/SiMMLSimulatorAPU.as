@@ -7,19 +7,19 @@
 
 package org.si.sion.sequencer.simulator {
     import org.si.sion.module.SiOPMTable;
+    import org.si.sion.sequencer.SiMMLChannelSetting;
     
     
-    /** @private */
+    /** Nintendo Entertainment System Simulator */
     public class SiMMLSimulatorAPU extends SiMMLSimulatorBase
     {
         function SiMMLSimulatorAPU()
         {
-            super(MT_APU, 4);
+            super(MT_APU, 4, new SiMMLSimulatorVoiceSet(11));
             
             var i:int, toneVoiceSet:SiMMLSimulatorVoiceSet;
-            
+
             // default voice set
-            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(11);
             for (i=0; i<8; i++) {
                 this._defaultVoiceSet.voices[i] = new SiMMLSimulatorVoice(SiOPMTable.PG_PULSE+i*2, SiOPMTable.PT_PSG);
             }

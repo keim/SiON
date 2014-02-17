@@ -6,19 +6,19 @@
 
 package org.si.sion.sequencer.simulator {
     import org.si.sion.module.SiOPMTable;
+    import org.si.sion.sequencer.SiMMLChannelSetting;
 
     
-    /** @private */
+    /** SEGA DCSG simulator */
     public class SiMMLSimulatorDCSG extends SiMMLSimulatorBase
     {
         function SiMMLSimulatorDCSG()
         {
-            super(MT_PSG, 4);
+            super(MT_PSG, 4, new SiMMLSimulatorVoiceSet(3));
             
             var i:int, toneVoiceSet:SiMMLSimulatorVoiceSet;
             
             // default voice set
-            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(3);
             this._defaultVoiceSet.voices[0] = new SiMMLSimulatorVoice(SiOPMTable.PG_SQUARE,      SiOPMTable.PT_PSG);
             this._defaultVoiceSet.voices[1] = new SiMMLSimulatorVoice(SiOPMTable.PG_NOISE_PULSE, SiOPMTable.PT_PSG_NOISE);
             this._defaultVoiceSet.voices[2] = new SiMMLSimulatorVoice(SiOPMTable.PG_PC_NZ_16BIT, SiOPMTable.PT_PSG);

@@ -14,12 +14,11 @@ package org.si.sion.sequencer {
     import org.si.sion.sequencer.base.MMLExecutor;
     import org.si.sion.sequencer.base.BeatPerMinutes;
     import org.si.sion.sequencer.base._sion_sequencer_internal;
+    import org.si.sion.sequencer.simulator.SiMMLSimulatorBase;
     import org.si.sion.namespaces._sion_internal;
     
     
-    /** Track for SiMMLSequencer. <br/>
-     *  There are 2 types of SiMMLTrack. One is "sequence track", and another is "controlable track". 
-     *  The "sequence track" plays a sequence in the mml data, and the "controlable track" plays interavtive sound.
+    /** Track is a musical sequence player for one voice.
      */
     public class SiMMLTrack
     {
@@ -134,7 +133,9 @@ package org.si.sion.sequencer {
         private var _priority:int;          // track priority
 
         // settings
-        private var _channelModuleSetting:SiMMLChannelSetting;          // selected module's setting
+        private var _channelModuleSetting:SiMMLChannelSetting;  // selected module's setting
+        private var _simulator:SiMMLSimulatorBase;              // simulator
+
         private var _velocityMode:int;   // velocity mode 
         private var _expressionMode:int; // expression mode
         private var _velocity:int;       // velocity[0-256-512]
@@ -537,14 +538,18 @@ package org.si.sion.sequencer {
         {
             // change module type
             _channelModuleSetting = _table.channelModuleSetting[type];
+            //_simulator = _table.simulators[type];
             
             // reset operator pgType, set SiMMLTrack._channelNumber inside
             _voiceIndex = _channelModuleSetting.initializeTone(this, channelNum, channel.bufferIndex);
+            //_voiceIndex = _simulator.initializeTone(this, channelNum, channel.bufferIndex);
+
             
             // select tone
             if (toneNum >= 0) {
                 _voiceIndex = toneNum;
                 _channelModuleSetting.selectTone(this, toneNum);
+                //_simulator.selectTone(this, toneNum);
             }
         }
         
@@ -779,9 +784,10 @@ package org.si.sion.sequencer {
             
             // channel module setting
             _channelModuleSetting = _table.channelModuleSetting[SiMMLTable.MT_PSG];
+            _simulator = _table.simulators[SiMMLTable.MT_PSG];
             _channelNumber = 0;
             
-            // initialize channel by _channelModuleSetting
+            // initialize channel by channel settings
             if (_mmlData) {
                 _vcommandShift = _mmlData.defaultVCommandShift;
                 _velocityMode = _mmlData.defaultVelocityMode;
@@ -797,6 +803,7 @@ package org.si.sion.sequencer {
             _note = -1;
             channel = null;
             _voiceIndex = _channelModuleSetting.initializeTone(this, int.MIN_VALUE, bufferIndex);
+            //_voiceIndex = _simulator.initializeTone(this, int.MIN_VALUE, bufferIndex);
             var tlTables:Vector.<Vector.<int>> = SiOPMTable.instance.eg_tlTables;
             channel.setVolumeTables(tlTables[_velocityMode], tlTables[_expressionMode]);
             
@@ -1022,6 +1029,7 @@ package org.si.sion.sequencer {
                 // change tone
                 if (_env_voice && --_cnt_voice == 0) {
                     _channelModuleSetting.selectTone(this, _env_voice.i);
+                    //_simulator.selectTone(this, _env_voice.i);
                     _env_voice = _env_voice.next;
                     _cnt_voice = _max_cnt_voice;
                 }
@@ -1083,6 +1091,7 @@ package org.si.sion.sequencer {
                 if (_processMode == ENVELOP) {
                     channel.offsetVolume(_expression, _velocity);
                     _channelModuleSetting.selectTone(this, _voiceIndex);
+                    //_simulator.selectTone(this, _voiceIndex);
                     channel.offsetFilter(128);
                 }
                 // previous note off
@@ -1247,6 +1256,7 @@ package org.si.sion.sequencer {
             var ret:MMLSequence = null;
             if (param[0] != int.MIN_VALUE) {
                 ret = _channelModuleSetting.selectTone(this, param[0]);
+                //ret = _simulator.selectTone(this, param[0]);
                 _voiceIndex = param[0];
             }
             channel.setParameters(param);

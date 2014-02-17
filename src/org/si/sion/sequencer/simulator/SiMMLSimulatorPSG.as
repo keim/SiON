@@ -8,7 +8,7 @@ package org.si.sion.sequencer.simulator {
     import org.si.sion.module.SiOPMTable;
     
     
-    /** @private */
+    /** Texas Instrments AY-3-8910 simulator */
     public class SiMMLSimulatorPSG extends SiMMLSimulatorBase
     {
         function SiMMLSimulatorPSG()

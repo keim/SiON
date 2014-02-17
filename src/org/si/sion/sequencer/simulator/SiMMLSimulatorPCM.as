@@ -9,14 +9,13 @@ package org.si.sion.sequencer.simulator {
     import org.si.sion.module.channels.SiOPMChannelManager;
     
     
-    /** @private */
+    /** PCM sound module simulator */
     public class SiMMLSimulatorPCM extends SiMMLSimulatorBase
     {
         function SiMMLSimulatorPCM()
         {
             super(MT_PCM, 1, false);
-            this._channelType = SiOPMChannelManager.CT_CHANNEL_PCM;
-            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(1, SiOPMTable.PG_PCM);
+            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(SiOPMChannelManager.CT_CHANNEL_PCM, 1, SiOPMTable.PG_PCM);
         }
     }
 }

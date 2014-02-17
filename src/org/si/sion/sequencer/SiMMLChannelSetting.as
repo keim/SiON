@@ -24,9 +24,9 @@ package org.si.sion.sequencer {
         static public const SELECT_TONE_NORMAL:int = 1;
         static public const SELECT_TONE_FM    :int = 2;
 
-        
-        
-        
+
+
+
     // variables
     //--------------------------------------------------
         public   var type:int;
@@ -39,10 +39,10 @@ package org.si.sion.sequencer {
         internal var _isSuitableForFMVoice:Boolean;
         internal var _defaultOpeCount:int;
         private  var _table:SiOPMTable;
-        
-        
-        
-        
+
+
+
+
     // constructor
     //--------------------------------------------------
         function SiMMLChannelSetting(type:int, offset:int, length:int, step:int, channelCount:int)
