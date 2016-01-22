@@ -14,8 +14,7 @@ package org.si.sion.sequencer.simulator {
     {
         function SiMMLSimulatorSampler()
         {
-            super(MT_SAMPLE, 1, false);
-            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(SiOPMChannelManager.CT_CHANNEL_SAMPLER, 1, 0);
+            super(MT_SAMPLE, 1, new SiMMLSimulatorVoiceSet(SiOPMChannelManager.CT_CHANNEL_SAMPLER, 1, 0), false);
         }
     }
 }

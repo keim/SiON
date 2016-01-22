@@ -5,6 +5,9 @@
 //----------------------------------------------------------------------------------------------------
 
 package org.si.sion.sequencer.simulator {
+    import org.si.sion.sequencer.SiMMLChannelSetting;
+
+    
     /** @private vioce setting for SiMMLSimulators */
     public class SiMMLSimulatorVoice
     {

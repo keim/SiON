@@ -6,6 +6,7 @@
 
 package org.si.sion.sequencer.simulator {
     import org.si.sion.module.SiOPMTable;
+    import org.si.sion.sequencer.SiMMLChannelSetting;
 
     /** @private set of vioce setting for SiMMLSimulators */
     public class SiMMLSimulatorVoiceSet

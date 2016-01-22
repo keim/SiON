@@ -19,8 +19,7 @@ package org.si.sion.sequencer.simulator {
     {
         function SiMMLSimulatorKS()
         {
-            super(MT_KS, 1, false);
-            /**/
+            super(MT_KS, 1, new SiMMLSimulatorVoiceSet(512, SiOPMTable.PG_SINE), false);
         }
     }
 }

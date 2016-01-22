@@ -14,12 +14,11 @@ package org.si.sion.sequencer.simulator {
     {
         function SiMMLSimulatorVRC6()
         {
-            super(MT_VRC6, 4);
+            super(MT_VRC6, 4, new SiMMLSimulatorVoiceSet(9));
             
             var i:int, toneVoiceSet:SiMMLSimulatorVoiceSet;
             
             // default voice set
-            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(9);
             for (i=0; i<8; i++) {
                 this._defaultVoiceSet.voices[i] = new SiMMLSimulatorVoice(SiOPMTable.PG_PULSE+i, SiOPMTable.PT_PSG);
             }

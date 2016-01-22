@@ -13,8 +13,7 @@ package org.si.sion.sequencer.simulator {
     {
         function SiMMLSimulatorPSG()
         {
-            super(MT_PSG, 3);
-            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(2);
+            super(MT_PSG, 3, new SiMMLSimulatorVoiceSet(2));
             this._defaultVoiceSet.voices[0] = new SiMMLSimulatorVoice(SiOPMTable.PG_SQUARE,      SiOPMTable.PT_PSG);
             this._defaultVoiceSet.voices[1] = new SiMMLSimulatorVoice(SiOPMTable.PG_NOISE_PULSE, SiOPMTable.PT_PSG_NOISE);
         }

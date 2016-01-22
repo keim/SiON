@@ -13,8 +13,7 @@ package org.si.sion.sequencer.simulator {
     {
         function SiMMLSimulatorNoise()
         {
-            super(MT_NOISE, 1);
-            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(16, SiOPMTable.PG_NOISE_WHITE);
+            super(MT_NOISE, 1, new SiMMLSimulatorVoiceSet(16, SiOPMTable.PG_NOISE_WHITE));
         }
     }
 }

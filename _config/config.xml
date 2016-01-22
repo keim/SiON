@@ -122,11 +122,18 @@
     <class>org.si.sion.sequencer.SiMMLVoice</class>
     <class>org.si.sion.sequencer.simulator.SiMMLSimulatorAPU</class>
     <class>org.si.sion.sequencer.simulator.SiMMLSimulatorBase</class>
+    <class>org.si.sion.sequencer.simulator.SiMMLSimulatorBaseFM</class>
     <class>org.si.sion.sequencer.simulator.SiMMLSimulatorDCSG</class>
-    <class>org.si.sion.sequencer.simulator.SiMMLSimulatorFM</class>
+    <class>org.si.sion.sequencer.simulator.SiMMLSimulatorFMMA3</class>
+    <class>org.si.sion.sequencer.simulator.SiMMLSimulatorFMOPL3</class>
+    <class>org.si.sion.sequencer.simulator.SiMMLSimulatorFMOPLL</class>
+    <class>org.si.sion.sequencer.simulator.SiMMLSimulatorFMOPM</class>
+    <class>org.si.sion.sequencer.simulator.SiMMLSimulatorFMOPN</class>
+    <class>org.si.sion.sequencer.simulator.SiMMLSimulatorFMOPNA</class>
+    <class>org.si.sion.sequencer.simulator.SiMMLSimulatorFMSiOPM</class>
     <class>org.si.sion.sequencer.simulator.SiMMLSimulatorGB</class>
     <class>org.si.sion.sequencer.simulator.SiMMLSimulatorKS</class>
-    <class>org.si.sion.sequencer.simulator.SiMMLSimulatorMA3</class>
+    <class>org.si.sion.sequencer.simulator.SiMMLSimulatorMA3WaveTable</class>
     <class>org.si.sion.sequencer.simulator.SiMMLSimulatorNoise</class>
     <class>org.si.sion.sequencer.simulator.SiMMLSimulatorPCM</class>
     <class>org.si.sion.sequencer.simulator.SiMMLSimulatorPSG</class>

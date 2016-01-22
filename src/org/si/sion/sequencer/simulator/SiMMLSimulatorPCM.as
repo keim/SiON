@@ -14,8 +14,7 @@ package org.si.sion.sequencer.simulator {
     {
         function SiMMLSimulatorPCM()
         {
-            super(MT_PCM, 1, false);
-            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(SiOPMChannelManager.CT_CHANNEL_PCM, 1, SiOPMTable.PG_PCM);
+            super(MT_PCM, 1, new SiMMLSimulatorVoiceSet(SiOPMChannelManager.CT_CHANNEL_PCM, 1, SiOPMTable.PG_PCM), false);
         }
     }
 }

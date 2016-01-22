@@ -143,7 +143,7 @@ package org.si.sion.sequencer.simulator {
                 // create new channel
                 track.channel = SiOPMChannelManager.newChannel(defaultChannelType, null, bufferIndex);
             } else 
-            if (track.channel.channelType != _channelType) {
+            if (track.channel.channelType != defaultChannelType) {
                 // change channel type
                 var prev:SiOPMChannelBase = track.channel;
                 track.channel = SiOPMChannelManager.newChannel(defaultChannelType, prev, bufferIndex);

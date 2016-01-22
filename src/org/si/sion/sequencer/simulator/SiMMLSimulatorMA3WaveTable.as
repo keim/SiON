@@ -13,8 +13,7 @@ package org.si.sion.sequencer.simulator {
     {
         function SiMMLSimulatorMA3WaveTable()
         {
-            super(MT_MA3, 1);
-            this._defaultVoiceSet = new SiMMLSimulatorVoiceSet(32, SiOPMTable.PG_MA3_WAVE);
+            super(MT_MA3, 1, new SiMMLSimulatorVoiceSet(32, SiOPMTable.PG_MA3_WAVE));
         }
     }
 }
