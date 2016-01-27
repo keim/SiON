@@ -172,8 +172,8 @@ package org.si.sion.sequencer {
             channelModuleSetting[MT_SAMPLE] = new SiMMLChannelSetting(MT_SAMPLE, 0,                         4,   1, 4);   // sampler. this is based on SiOPMChannelSampler
             channelModuleSetting[MT_KS]     = new SiMMLChannelSetting(MT_KS,     0,                         3,   1, 3);   // karplus strong (0-2 to choose seed generator algrism)
             channelModuleSetting[MT_GB]     = new SiMMLChannelSetting(MT_GB,     SiOPMTable.PG_PULSE,       11,  2, 4);   // Gameboy
-            channelModuleSetting[MT_VRC6]   = new SiMMLChannelSetting(MT_VRC6,   SiOPMTable.PG_PULSE,       8,   1, 9);   // VRC6
-            channelModuleSetting[MT_SID]    = new SiMMLChannelSetting(MT_SID,    SiOPMTable.PG_PULSE,       8,   1, 9);   // SID
+            channelModuleSetting[MT_VRC6]   = new SiMMLChannelSetting(MT_VRC6,   SiOPMTable.PG_PULSE,       9,   1, 3);   // VRC6
+            channelModuleSetting[MT_SID]    = new SiMMLChannelSetting(MT_SID,    SiOPMTable.PG_PULSE,       11,  1, 3);   // SID
             
             // PSG setting
             ms = channelModuleSetting[MT_PSG];
@@ -213,12 +213,24 @@ package org.si.sion.sequencer {
             ms._voiceIndexTable[3] = 9;
             // VRC6 setting
             ms = channelModuleSetting[MT_VRC6];
-            ms._pgTypeList[9] = SiOPMTable.PG_SAW_VC6;
-            ms._ptTypeList[9] = SiOPMTable.PT_PSG;
+            ms._pgTypeList[8] = SiOPMTable.PG_SAW_VC6;
+            ms._ptTypeList[8] = SiOPMTable.PT_PSG;
             ms._initVoiceIndex = 1;
             ms._voiceIndexTable[0] = 7;
             ms._voiceIndexTable[1] = 7;
             ms._voiceIndexTable[2] = 8;
+            // SID setting
+            ms = channelModuleSetting[MT_SID];
+            ms._pgTypeList[8] = SiOPMTable.PG_TRIANGLE;
+            ms._pgTypeList[9] = SiOPMTable.PG_SAW_UP;
+            ms._pgTypeList[10] = SiOPMTable.PG_SAW_VC6;
+            ms._pgTypeList[11] = SiOPMTable.PG_NOISE_PULSE;
+            for (i=0; i<11;  i++) { ms._ptTypeList[i] = SiOPMTable.PT_PSG; }
+            ms._ptTypeList[11] = SiOPMTable.PT_OPM_NOISE;
+            ms._initVoiceIndex = 1;
+            ms._voiceIndexTable[0] = 7;
+            ms._voiceIndexTable[1] = 7;
+            ms._voiceIndexTable[2] = 7;
             // FM setting
             channelModuleSetting[MT_FM]._selectToneType = SiMMLChannelSetting.SELECT_TONE_FM;
             channelModuleSetting[MT_FM]._isSuitableForFMVoice = false;
