@@ -173,7 +173,7 @@ package org.si.sion.sequencer {
             channelModuleSetting[MT_KS]     = new SiMMLChannelSetting(MT_KS,     0,                         3,   1, 3);   // karplus strong (0-2 to choose seed generator algrism)
             channelModuleSetting[MT_GB]     = new SiMMLChannelSetting(MT_GB,     SiOPMTable.PG_PULSE,       11,  2, 4);   // Gameboy
             channelModuleSetting[MT_VRC6]   = new SiMMLChannelSetting(MT_VRC6,   SiOPMTable.PG_PULSE,       9,   1, 3);   // VRC6
-            channelModuleSetting[MT_SID]    = new SiMMLChannelSetting(MT_SID,    SiOPMTable.PG_PULSE,       11,  1, 3);   // SID
+            channelModuleSetting[MT_SID]    = new SiMMLChannelSetting(MT_SID,    SiOPMTable.PG_PULSE,       12,  1, 3);   // SID
             
             // PSG setting
             ms = channelModuleSetting[MT_PSG];
