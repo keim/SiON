@@ -200,16 +200,21 @@ package org.si.sion.utils.soundloader {
         {
             var count:int = 0;
             for (var i:int=0; i<_preserveList.length; i++) {
-                if (_preserveList[i].load()) count++;
-                else _preserveList[i].dispatchEvent(new Event(Event.COMPLETE, false, false));
+                if (_preserveList[i].data == null) {
+                    _preserveList[i].load();
+                    count++;
+                } else {
+                    _preserveList[i].dispatchEvent(new Event(Event.COMPLETE, false, false));
+                }
             }
-            
+            _preserveList.length = 0;
+
             if (_loadingFileCount + count > 0) {
-                _preserveList.length = 0;
                 _loadingFileCount += count;
             } else {
                 dispatchEvent(new Event(Event.COMPLETE, false, false));
             }
+            
             return count;
         }
         

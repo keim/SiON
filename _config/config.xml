@@ -152,6 +152,7 @@
     <class>org.si.sion.utils.BPMAnalyzer</class>
     <class>org.si.sion.utils.Chord</class>
     <class>org.si.sion.utils.Fader</class>
+    <class>org.si.sion.utils.MMLTalksParser</class>
     <class>org.si.sion.utils.PCMSample</class>
     <class>org.si.sion.utils.PeakDetector</class>
     <class>org.si.sion.utils.Scale</class>

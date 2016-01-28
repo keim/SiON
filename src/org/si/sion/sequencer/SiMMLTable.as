@@ -321,7 +321,9 @@ package org.si.sion.sequencer {
             var param:SiOPMChannelParam = voice.channelParam;
             var opp0:SiOPMOperatorParam = param.operatorParam[0];
             var opp1:SiOPMOperatorParam = param.operatorParam[1];
-            voice.setModuleType(6);
+            voice.moduleType = 6;
+            voice.channelNum = 0;
+            voice.toneNum    = -1;
             voice.chipType = "OPL";
             param.fratio = 133;
             param.opeCount = 2;

@@ -68,6 +68,7 @@ package org.si.sion.midi {
         private var _systemExclusiveMode:String;
         // others --------------------
         private var _dispatchFlags:int = 0;
+        private var _internalPreset:SiONPresetVoice = null;
         
         
     // properties
@@ -145,16 +146,11 @@ package org.si.sion.midi {
             this.midiChannelCount = midiChannelCount;
             
             // load preset voices
-            var preset:SiONPresetVoice = SiONPresetVoice.mutex;
-            if (!preset || !preset["svmidi"] || !preset["svmidi.drum"]) {
-                preset = new SiONPresetVoice(SiONPresetVoice.INCLUDE_WAVETABLE | SiONPresetVoice.INCLUDE_SINGLE_DRUM);
+            _internalPreset = SiONPresetVoice.mutex;
+            if (!_internalPreset || !_internalPreset["svmidi"] || !_internalPreset["svmidi.drum"]) {
+                _internalPreset = new SiONPresetVoice(SiONPresetVoice.INCLUDE_WAVETABLE | SiONPresetVoice.INCLUDE_SINGLE_DRUM);
             }
-            for (i=0; i<128; i++) {
-                voiceSet[i] = preset["svmidi"][i];
-            }
-            for (i=0; i<60; i++) {
-                drumVoiceSet[i+24] = preset["svmidi.drum"][i];
-            }
+            resetVoiceSet();
         }
         
         
@@ -243,6 +239,19 @@ package org.si.sion.midi {
             for (var ch:int=0; ch<midiChannels.length; ch++) {
                 midiChannels[ch].reset();
                 if ((ch & 15) == 9) midiChannels[ch].drumMode = 1;
+            }
+        }
+
+
+        /** reset voice set to default */
+        public function resetVoiceSet() : void
+        {
+            var i:int;
+            for (i=0; i<128; i++) {
+                voiceSet[i] = _internalPreset["svmidi"][i];
+            }
+            for (i=0; i<60; i++) {
+                drumVoiceSet[i+24] = _internalPreset["svmidi.drum"][i];
             }
         }
         
