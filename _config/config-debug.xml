@@ -12,7 +12,7 @@
     <incremental>false</incremental>
 
     <external-library-path>
-      <path-element>${flexlib}/libs/player/11.9/playerglobal.swc</path-element>
+      <path-element>${flexlib}/libs/player/20.0/playerglobal.swc</path-element>
     </external-library-path>
     
     <source-path>
