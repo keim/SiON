@@ -1140,8 +1140,7 @@ package org.si.sion.module {
             table = new Vector.<int>(256, true);
             for (i=0; i<256; i++) {
                 table[i] = (i-128)*(i-128);
-            }
-            lfo_chorusTables = table;
+            }            lfo_chorusTables = table;
         }
         
         
